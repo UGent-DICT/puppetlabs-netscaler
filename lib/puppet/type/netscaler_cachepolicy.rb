@@ -26,23 +26,23 @@ Puppet::Type.newtype(:netscaler_cachepolicy) do
   end
 
   #The content group must exist before being mentioned here. Use the "show cache contentgroup" command to view the list of existing content groups. Minimum length = 1
-  newproperty(:storeingroup) do
+  newproperty(:store_in_group) do
     desc "Name of the content group in which to store the object when the final result of policy evaluation is CACHE"
   end
 
-  newproperty(:invalgroups) do
+  newproperty(:inval_groups) do
     desc "Content group(s) to be invalidated when the INVAL action is applied. Maximum number of content groups that can be specified is 16."
   end
 
-  newproperty(:invalobjects) do
+  newproperty(:inval_objects) do
     desc "Content groups(s) in which the objects will be invalidated if the action is INVAL."
   end
 
-  newproperty(:undefaction) do
+  newproperty(:undef_action) do
     desc "Action to be performed when the result of rule evaluation is undefined.<br> Possible values = NOCACHE, RESET"
   end
 
-  newproperty(:newname) do
+  newproperty(:new_name) do
     desc "New name for the cache policy. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters."
   end
 
