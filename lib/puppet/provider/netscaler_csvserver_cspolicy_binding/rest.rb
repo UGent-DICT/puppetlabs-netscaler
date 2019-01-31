@@ -17,6 +17,7 @@ Puppet::Type.type(:netscaler_csvserver_cspolicy_binding).provide(:rest, {:parent
           :ensure           => :present,
           :name             => "#{bind['name']}/#{bind['policyname']}",
           :priority         => bind['priority'],
+          :bindpoint        => bind['bindpoint'],
           :goto_expression  => bind['gotopriorityexpression'],
           :label_name       => bind['labelname'],
           :target_lbvserver => bind['targetlbvserver'],

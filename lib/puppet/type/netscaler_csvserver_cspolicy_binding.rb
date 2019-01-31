@@ -21,6 +21,10 @@ Max = 2147483647"
     end
   end
 
+  newproperty(:bindpoint) do
+    desc "The bindpoint to which the policy is bound.Possible values = REQUEST, RESPONSE"
+  end
+
   newproperty(:goto_expression) do
     desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE"
   end
