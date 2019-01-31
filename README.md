@@ -166,6 +166,13 @@ This example is for setting up a simple configuration. However, for anything mor
 
 ## Reference
 
+### Custom Types
+
+If you can't find a public type, you can create your own by pairing it with a custom provider.
+Look at the official [documentation](https://developer-docs.citrix.com/projects/netscaler-nitro-api/en/latest/) for possible parameters and properties.
+
+(**Note:** The puppetserver caches types, to load an up-to-date type run `/etc/init.d/puppetserver reload`)
+
 ### Public Types
 
 * [`netscaler_csaction`](#type-netscaler_csaction)
