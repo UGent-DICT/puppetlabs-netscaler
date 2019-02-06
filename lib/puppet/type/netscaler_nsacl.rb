@@ -75,7 +75,7 @@ Puppet::Type.newtype(:netscaler_nsacl) do
   end
 
   newproperty(:srcmacmask) do
-    desc "Used to define range of Source MAC address. It takes string of 0 and 1, 0s are for exact match and 1s for wildcard. For matching first 3 bytes of MAC address, srcMacMask value "000000111111". .<br>Default value: "000000000000""
+    desc "Used to define range of Source MAC address. It takes string of 0 and 1, 0s are for exact match and 1s for wildcard. For matching first 3 bytes of MAC address, srcMacMask"
   end
 
   newproperty(:protocol) do
