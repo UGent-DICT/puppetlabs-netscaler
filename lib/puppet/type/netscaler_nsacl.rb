@@ -94,7 +94,7 @@ Puppet::Type.newtype(:netscaler_nsacl) do
     desc "ID of the VXLAN. The NetScaler appliance applies the ACL rule only to the incoming packets of the specified VXLAN. If you do not specify a VXLAN ID, the appliance applies the ACL rule to the incoming packets on all VXLANs.<br>Minimum value = 1<br>Maximum value = 16777215"
   end
 
-  newproperty(:Interface) do
+  newproperty(:interface) do
     desc "ID of an interface. The NetScaler appliance applies the ACL rule only to the incoming packets from the specified interface. If you do not specify any value, the appliance applies the ACL rule to the incoming packets of all interfaces."
   end
 

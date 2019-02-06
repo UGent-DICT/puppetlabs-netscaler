@@ -36,7 +36,7 @@ Puppet::Type.type(:netscaler_nsacl).provide(:rest, {:parent => Puppet::Provider:
         :protocolnumber => nsacl['protocolnumber'],
         :vlan           => nsacl['vlan'],
         :vxlan          => nsacl['vxlan'],
-        :Interface      => nsacl['Interface'],
+        :interface      => nsacl['Interface'],
         :established    => nsacl['established'],
         :icmptype       => nsacl['icmptype'],
         :icmpcode       => nsacl['icmpcode'],
@@ -58,6 +58,7 @@ Puppet::Type.type(:netscaler_nsacl).provide(:rest, {:parent => Puppet::Provider:
   def property_to_rest_mapping
     {
       :name           => :aclname,
+      :interface      => :Interface,
     }
   end
 
