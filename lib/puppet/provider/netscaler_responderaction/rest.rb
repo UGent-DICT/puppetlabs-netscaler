@@ -13,12 +13,14 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet:
 
     responderactions.each do |responderaction|
       instances << new({
-        :ensure              => :present,
-        :name                => responderaction['name'],
-        :type                => responderaction['type'],
-        :expression          => responderaction['target'],
-        :bypass_safety_check => responderaction['bypasssafetycheck'],
-        :comments            => responderaction['comment'],
+        :ensure               => :present,
+        :name                 => responderaction['name'],
+        :type                 => responderaction['type'],
+        :expression           => responderaction['target'],
+        :bypass_safety_check  => responderaction['bypasssafetycheck'],
+        :comments             => responderaction['comment'],
+        :response_status_code => responderaction['responsestatuscode'],
+        :html_page            => responderaction['htmlpage'],
       })
     end
 
@@ -30,8 +32,10 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet:
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :expression => :target,
-      :comments   => :comment,
+      :expression           => :target,
+      :comments             => :comment,
+      :response_status_code => :responsestatuscode,
+      :html_page            => :htmlpage,
     }
   end
 

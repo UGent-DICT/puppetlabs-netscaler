@@ -21,8 +21,9 @@ Puppet::Type.newtype(:netscaler_responderaction) do
         :redirect,
         :sqlresponse_ok,
         :sqlresponse_error,
+        :respondwithhtmlpage
       ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: noop, respondwith, redirect,  sqlresponse_ok, sqlresponse_error" 
+        fail ArgumentError, "Valid options: noop, respondwith, redirect,  sqlresponse_ok, sqlresponse_error, respondwithhtmlpage" 
       end
     end
 
@@ -34,9 +35,13 @@ Puppet::Type.newtype(:netscaler_responderaction) do
   end
 
   #linked to type :repondwithhtmlpage
-  #newproperty(:htmlpage) do
-  #  desc "For respondwith htmlpage policies, name of the HTML page object to use as the response."
-  #end
+  newproperty(:html_page) do
+    desc "For respondwith htmlpage policies, name of the HTML page object to use as the response."
+  end
+
+  newproperty(:response_status_code) do
+    desc "HTTP response status code, for example 200, 302, 404, etc"
+  end
 
   #linked with :respondwidth :redirect
   newproperty(:bypass_safety_check, :parent => Puppet::Property::NetscalerTruthy) do
