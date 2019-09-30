@@ -12,8 +12,9 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, {:parent => Puppet::Provi
     return [] if monitors.nil?
 
     unit_map = {
-      'SEC' => 1,
-      'MIN' => 60
+      'MSEC' => 0.001,
+      'SEC'  => 1,
+      'MIN'  => 60
     }
 
     monitors.each do |monitor|
