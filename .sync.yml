@@ -43,6 +43,9 @@ Rakefile:
   
 #end Rakefile>extras
 
+.travis.yml:
+  branches: [ 'develop' ]
+
 # Unused files.
 appveyor.yml:
   delete: true
