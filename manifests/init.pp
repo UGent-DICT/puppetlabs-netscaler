@@ -1,3 +1,4 @@
+# @summary Calls netscaler::install.
 class netscaler {
-  class { 'netscaler::install': }
+  class { '::netscaler::install': }
 }
