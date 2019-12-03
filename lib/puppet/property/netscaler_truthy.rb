@@ -1,9 +1,9 @@
 require 'puppet/property'
 
 class Puppet::Property::NetscalerTruthy < Puppet::Property
-  def self.truthy_property(desc=nil, trueval=:enabled, falseval=:disabled)
+  def self.truthy_property(desc = nil, trueval = :enabled, falseval = :disabled)
     options = [:yes, :no, :true, :false, :enabled, :disabled, :ENABLED, :DISABLED, :YES, :NO, :on, :off, :ON, :OFF]
-    desc "#{desc or 'Undocumented attribute.'}
+    desc "#{desc || 'Undocumented attribute.'}
     Valid options: <#{options.join('|')}>"
 
     validate do |value|

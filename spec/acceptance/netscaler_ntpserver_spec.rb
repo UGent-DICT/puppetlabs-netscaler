@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'ntpserver tests' do
   it 'makes an ntpserver' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_ntpserver { 'test1':
         ensure                => present,
         minimum_poll_interval => '5',
@@ -12,12 +12,12 @@ describe 'ntpserver tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and edits an ntpserver' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_ntpserver { 'test2':
         ensure                => present,
         minimum_poll_interval => '5',
@@ -26,7 +26,7 @@ describe 'ntpserver tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_ntpserver { 'test2':
         ensure                => present,
         minimum_poll_interval => '6',
@@ -36,14 +36,14 @@ describe 'ntpserver tests' do
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes an ntpserver' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_ntpserver { 'test3':
         ensure                => present,
         minimum_poll_interval => '6',
@@ -52,16 +52,16 @@ describe 'ntpserver tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_ntpserver { 'test3':
         ensure  => absent,
       }
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

@@ -1,27 +1,25 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_csvserver_cspolicy_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
+Puppet::Type.type(:netscaler_csvserver_cspolicy_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
   def netscaler_api_type
-    "csvserver_cspolicy_binding"
+    'csvserver_cspolicy_binding'
   end
 
   def self.instances
     instances = []
-    csvservers = Puppet::Provider::Netscaler.call("/config/csvserver")
+    csvservers = Puppet::Provider::Netscaler.call('/config/csvserver')
     return [] if csvservers.nil?
 
     csvservers.each do |csvserver|
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_cspolicy_binding/#{csvserver['name']}") || []
       binds.each do |bind|
-        instances << new({
-          :ensure           => :present,
-          :name             => "#{bind['name']}/#{bind['policyname']}",
-          :priority         => bind['priority'],
-          :bindpoint        => bind['bindpoint'],
-          :goto_expression  => bind['gotopriorityexpression'],
-          :label_name       => bind['labelname'],
-          :target_lbvserver => bind['targetlbvserver'],
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['name']}/#{bind['policyname']}",
+                         priority: bind['priority'],
+                         bindpoint: bind['bindpoint'],
+                         goto_expression: bind['gotopriorityexpression'],
+                         label_name: bind['labelname'],
+                         target_lbvserver: bind['targetlbvserver'])
       end
     end
 
@@ -32,9 +30,9 @@ Puppet::Type.type(:netscaler_csvserver_cspolicy_binding).provide(:rest, {:parent
 
   def property_to_rest_mapping
     {
-      :goto_expression  => :gotopriorityexpression,
-      :label_name       => :labelname,
-      :target_lbvserver => :targetlbvserver,
+      goto_expression: :gotopriorityexpression,
+      label_name: :labelname,
+      target_lbvserver: :targetlbvserver,
     }
   end
 

@@ -1,27 +1,25 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "servicegroup_servicegroupmember_binding"
+    'servicegroup_servicegroupmember_binding'
   end
 
   def self.instances
     instances     = []
-    servicegroups = Puppet::Provider::Netscaler.call("/config/servicegroup")
+    servicegroups = Puppet::Provider::Netscaler.call('/config/servicegroup')
     return [] if servicegroups.nil?
 
     servicegroups.each do |servicegroup|
       binds = Puppet::Provider::Netscaler.call("/config/servicegroup_servicegroupmember_binding/#{servicegroup['servicegroupname']}") || []
       binds.each do |bind|
-        instances << new({
-          :ensure           => :present,
-          :name             => "#{bind['servicegroupname']}/#{bind['servername']}:#{bind['port']}",
-          :weight           => bind['weight'],
-          :server_id        => bind['serverid'],
-          :hash_id          => bind['hashid'],
-          :state            => bind['state'],
-          :custom_server_id => bind['customserverid'],
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['servicegroupname']}/#{bind['servername']}:#{bind['port']}",
+                         weight: bind['weight'],
+                         server_id: bind['serverid'],
+                         hash_id: bind['hashid'],
+                         state: bind['state'],
+                         custom_server_id: bind['customserverid'])
       end
     end
 
@@ -34,10 +32,10 @@ Puppet::Type.type(:netscaler_servicegroup_member).provide(:rest, {:parent => Pup
   def destroy
     toname, fromname_port = resource.name.split('/')
     fromname, port        = fromname_port.split(':')
-    result                = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}", {'args' => "servername:#{fromname},port:#{port}"})
+    result                = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}", 'args' => "servername:#{fromname},port:#{port}")
     @property_hash.clear
 
-    return result
+    result
   end
 
   def immutable_properties

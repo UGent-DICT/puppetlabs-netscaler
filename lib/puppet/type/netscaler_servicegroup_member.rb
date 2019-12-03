@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_servicegroup_member) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "servicegroup_name/server_name:server_port"
+  newparam(:name, namevar: true) do
+    desc 'servicegroup_name/server_name:server_port'
     validate do |value|
       # This should validate that port is a port
     end
@@ -18,13 +18,13 @@ Puppet::Type.newtype(:netscaler_servicegroup_member) do
 
     Min = 1
     Max = 100"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
-  newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:state, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property('The configured state (enable/disable) of the service group.', 'ENABLED', 'DISABLED')
   end
 
@@ -40,7 +40,7 @@ Puppet::Type.newtype(:netscaler_servicegroup_member) do
   end
 
   newproperty(:server_id) do
-    desc "The identifier for the service. This is used when the persistency type is set to Custom Server ID."
+    desc 'The identifier for the service. This is used when the persistency type is set to Custom Server ID.'
     munge do |value|
       Integer(value)
     end
@@ -49,10 +49,9 @@ Puppet::Type.newtype(:netscaler_servicegroup_member) do
   newproperty(:hash_id) do
     desc "The hash identifier for the service. This must be unique for each service. This parameter is used by hash based load balancing methods.
     Min = 1"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
-
 end

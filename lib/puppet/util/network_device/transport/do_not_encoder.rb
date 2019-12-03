@@ -3,10 +3,10 @@ require 'faraday/parameters'
 class Puppet::Util::NetworkDevice::Transport::DoNotEncoder
   include ::Faraday::NestedParamsEncoder
   def self.encode(params)
-    if params and ! params.empty?
-      params.collect do |k,v|
+    if params && !params.empty?
+      params.map { |k, v|
         "#{k}=#{v}"
-      end.join '&'
+      }.join '&'
     end
   end
 end

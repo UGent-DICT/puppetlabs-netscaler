@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'servicegroup tests' do
   it 'makes a servicegroup' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup':
         ensure            => 'present',
         member_port       => '80',
@@ -13,12 +13,12 @@ describe 'servicegroup tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and edits servicegroup' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup2':
         ensure            => 'present',
         member_port       => '80',
@@ -29,7 +29,7 @@ describe 'servicegroup tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup2':
         ensure            => 'present',
         member_port       => '80',
@@ -40,14 +40,14 @@ describe 'servicegroup tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes servicegroup' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup3':
         ensure            => 'present',
         member_port       => '80',
@@ -58,20 +58,20 @@ describe 'servicegroup tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup3':
         ensure            => 'absent',
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and disables/enables servicegroup' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup4':
         ensure            => 'present',
         autoscale_mode    => 'DISABLED',
@@ -82,7 +82,7 @@ describe 'servicegroup tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup4':
         ensure            => 'present',
         autoscale_mode    => 'DISABLED',
@@ -93,7 +93,7 @@ describe 'servicegroup tests' do
       }
     EOS
 
-    pp3=<<-EOS
+    pp3 = <<-EOS
       netscaler_servicegroup { '1_4_servicegroup4':
         ensure            => 'present',
         autoscale_mode    => 'DISABLED',
@@ -104,12 +104,12 @@ describe 'servicegroup tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
     make_site_pp(pp3)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

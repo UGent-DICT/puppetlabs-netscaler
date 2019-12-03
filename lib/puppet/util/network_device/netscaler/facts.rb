@@ -37,8 +37,8 @@ class Puppet::Util::NetworkDevice::Netscaler::Facts
     facts['version']         = @transport.call('/config/nsversion')['version']
     facts['macaddress']      = @transport.call('/config/Interface').first['mac']
     facts['operatingsystem'] = 'Netscaler'
-    #facts['fqdn']           = facts[:hostname]
+    # facts['fqdn']           = facts[:hostname]
 
-    return facts
+    facts
   end
 end

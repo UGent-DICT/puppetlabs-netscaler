@@ -9,12 +9,12 @@ netscaler_csaction { 'test_csaction':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a cspolicy' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_cspolicy { 'test':
   ensure      => present,
   expression  => 'HTTP.REQ.URL.PATH_AND_QUERY.CONTAINS("test")',
@@ -22,12 +22,12 @@ netscaler_cspolicy { 'test':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'edit a cspolicy' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_cspolicy { 'test':
   ensure      => present,
   expression  => 'HTTP.REQ.URL.PATH_AND_QUERY.CONTAINS("nothing")',
@@ -35,18 +35,18 @@ netscaler_cspolicy { 'test':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'delete a cspolicy' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_cspolicy { 'test':
   ensure => absent,
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

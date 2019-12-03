@@ -8,10 +8,10 @@ Puppet::Type.newtype(:netscaler_route) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
-    desc "IPv4 network address, netmask and gateway. In the following format network/netmask:gateway eg 8.8.8.0/255.255.255.0:null"
-  #XXX Validate with the below
-  #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
+  desc 'IPv4 network address, netmask and gateway. In the following format network/netmask:gateway eg 8.8.8.0/255.255.255.0:null'
+  # XXX Validate with the below
+  # ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
   newproperty(:td) do
     desc "Integer value that uniquely identifies the traffic domain in which you want to configure the entity. If you do not specify an ID, the entity becomes part of the default traffic domain, which has an ID of 0.
@@ -39,34 +39,34 @@ Minimum value = 1
 Maximum value = 65535"
   end
 
-  newproperty(:advertise, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Advertise this route. Possible values = DISABLED, ENABLED", "ENABLED", "DISABLED")
+  newproperty(:advertise, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Advertise this route. Possible values = DISABLED, ENABLED', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:protocol, :array_matching => :all) do
+  newproperty(:protocol, array_matching: :all) do
     desc "Routing protocol used for advertising this route.
 Default value: ADV_ROUTE_FLAGS
 Possible values = OSPF, ISIS, RIP, BGP"
     validate do |value|
-      if ! [
+      if [
         :ADV_ROUTE_FLAGS,
         :OSPF,
         :ISIS,
         :RIP,
         :BGP,
-      ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: ADV_ROUTE_FLAGS, OSPF, ISIS, RIP, BGP"
-      end 
+      ].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: ADV_ROUTE_FLAGS, OSPF, ISIS, RIP, BGP'
+      end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:msr, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Monitor this route using a monitor of type ARP or PING. Possible values = DISABLED, ENABLED", "ENABLED", "DISABLED")
+  newproperty(:msr, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Monitor this route using a monitor of type ARP or PING. Possible values = DISABLED, ENABLED', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:monitor) do
-    desc "Name of the monitor, of type ARP or PING, configured on the NetScaler appliance to monitor this route. Minimum length = 1"
+    desc 'Name of the monitor, of type ARP or PING, configured on the NetScaler appliance to monitor this route. Minimum length = 1'
   end
 end

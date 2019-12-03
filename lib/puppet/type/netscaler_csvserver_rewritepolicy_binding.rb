@@ -6,26 +6,26 @@ Puppet::Type.newtype(:netscaler_csvserver_rewritepolicy_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "csvserver_name/policy_name"
+  newparam(:name, namevar: true) do
+    desc 'csvserver_name/policy_name'
   end
 
   newproperty(:choose_type) do
-    desc "Type of invocation when invoking a vserver. Available settings functions are Request and Response. This property is not applicable for use in conjunction with invoking a Policy Label." 
+    desc 'Type of invocation when invoking a vserver. Available settings functions are Request and Response. This property is not applicable for use in conjunction with invoking a Policy Label.'
 
     validate do |value|
-      if ! [:Request,:Response,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: Request, Response"
+      if [:Request, :Response].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: Request, Response'
       end
     end
 
     munge do |value|
       value = value.upcase
       case value
-        when 'REQUEST'
-          value = 'Request'
-        when 'RESPONSE'
-          value = 'Response'
+      when 'REQUEST'
+        value = 'Request'
+      when 'RESPONSE'
+        value = 'Response'
       end
       value
     end
@@ -36,26 +36,26 @@ Puppet::Type.newtype(:netscaler_csvserver_rewritepolicy_binding) do
 
 Min = 1
 Max = 2147483647"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
   newproperty(:goto_expression) do
-    desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE"
+    desc 'Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE'
   end
 
   newproperty(:invoke_policy_label) do
-    desc "Label of policy to invoke if the bound policy evaluates to true."
+    desc 'Label of policy to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:invoke_vserver_label) do
-    desc "Label of csvserver to invoke if the bound policy evaluates to true."
+    desc 'Label of csvserver to invoke if the bound policy evaluates to true.'
   end
 
   autorequire(:netscaler_csvserver) do
-    [self[:name].split('/')[0],self[:invoke_vserver_label]]
+    [self[:name].split('/')[0], self[:invoke_vserver_label]]
   end
 
   autorequire(:netscaler_rewritepolicy) do
@@ -75,13 +75,13 @@ Max = 2147483647"
       self[:invoke_policy_label],
       self[:invoke_vserver_label],
     ].compact.length > 1
-      fail "Only one of invoke_policy_label or invoke_vserver_label may be specified per binding."
+      raise 'Only one of invoke_policy_label or invoke_vserver_label may be specified per binding.'
     end
   end
 
   validate do
-    if !self[:choose_type] and !(self[:ensure] == :absent)
-      fail "choose_type must be specified."
+    if !self[:choose_type] && self[:ensure] != :absent
+      raise 'choose_type must be specified.'
     end
   end
 end

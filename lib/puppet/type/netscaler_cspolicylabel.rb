@@ -8,9 +8,9 @@ Puppet::Type.newtype(:netscaler_cspolicylabel) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
-  #XXX Validat with the below
-  #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
+  # XXX Validat with the below
+  # ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
   newproperty(:label_type) do
     desc "Protocol supported by the policy label. All policies bound to the policy label must either match the specified protocol or be a subtype of that protocol. Available settings function as follows:
@@ -27,7 +27,7 @@ Puppet::Type.newtype(:netscaler_cspolicylabel) do
 * MYSQL - Supports policies that process MYSQL traffic.
 * MSSQL - Supports policies that process Microsoft SQL traffic."
     validate do |value|
-      if ! [
+      if [
         :HTTP,
         :ANY,
         :DIAMETER,
@@ -46,8 +46,8 @@ Puppet::Type.newtype(:netscaler_cspolicylabel) do
         :SSL_TCP,
         :TCP,
         :UDP,
-      ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: HTTP, TCP, RTSP, SSL, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, ORACLE, DIAMETER, SSL_DIAMETER, FTP, DNS_TCP" 
+      ].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: HTTP, TCP, RTSP, SSL, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, ORACLE, DIAMETER, SSL_DIAMETER, FTP, DNS_TCP'
       end
     end
 

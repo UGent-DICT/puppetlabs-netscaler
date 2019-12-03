@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'csvserver-rewritepolicy-binding' do
   it 'makes a csvserver-rewritepolicy-binding' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewritepolicy { '2_4_rewritepolicy_test1':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
@@ -27,12 +27,12 @@ netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test1/2_4_rewritepoli
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a csvserver-rewritepolicy-binding' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewritepolicy { '2_4_rewritepolicy_test2':
   ensure                  => 'present',
   action                  => 'NOREWRITE',
@@ -57,15 +57,15 @@ netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test2/2_4_rewritepoli
 }
 EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
 netscaler_csvserver_rewritepolicy_binding { '2_4_csvserver_test2/2_4_rewritepolicy_test2':
   ensure    => absent,
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

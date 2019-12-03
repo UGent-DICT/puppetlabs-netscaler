@@ -7,9 +7,9 @@ Puppet::Type.newtype(:netscaler_cachepolicy) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
-  #XXX Validat with the below
-  #ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
+  # XXX Validat with the below
+  # ensure: change from absent to present failed: Could not set 'present' on ensure: REST failure: HTTP status code 400 detected.  Body of failure is: { "errorcode": 1075, "message": "Invalid name; names must begin with an alphanumeric character or underscore and must contain only alphanumerics, '_', '#', '.', ' ', ':', '@', '=' or '-' [name, hunner's website]", "severity": "ERROR" } at 55:/etc/puppetlabs/puppet/environments/produc
 
   newproperty(:expression) do
     desc "Expression, or name of a named expression, against which traffic is evaluated. Written in the classic or default syntax.
@@ -22,28 +22,27 @@ Puppet::Type.newtype(:netscaler_cachepolicy) do
   end
 
   newproperty(:action) do
-    desc "Name of the cache action to perform if the request matches this cache policy."
+    desc 'Name of the cache action to perform if the request matches this cache policy.'
   end
 
-  #The content group must exist before being mentioned here. Use the "show cache contentgroup" command to view the list of existing content groups. Minimum length = 1
+  # The content group must exist before being mentioned here. Use the "show cache contentgroup" command to view the list of existing content groups. Minimum length = 1
   newproperty(:store_in_group) do
-    desc "Name of the content group in which to store the object when the final result of policy evaluation is CACHE"
+    desc 'Name of the content group in which to store the object when the final result of policy evaluation is CACHE'
   end
 
   newproperty(:inval_groups) do
-    desc "Content group(s) to be invalidated when the INVAL action is applied. Maximum number of content groups that can be specified is 16."
+    desc 'Content group(s) to be invalidated when the INVAL action is applied. Maximum number of content groups that can be specified is 16.'
   end
 
   newproperty(:inval_objects) do
-    desc "Content groups(s) in which the objects will be invalidated if the action is INVAL."
+    desc 'Content groups(s) in which the objects will be invalidated if the action is INVAL.'
   end
 
   newproperty(:undef_action) do
-    desc "Action to be performed when the result of rule evaluation is undefined.<br> Possible values = NOCACHE, RESET"
+    desc 'Action to be performed when the result of rule evaluation is undefined.<br> Possible values = NOCACHE, RESET'
   end
 
   newproperty(:new_name) do
-    desc "New name for the cache policy. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters."
+    desc 'New name for the cache policy. Must begin with an ASCII alphabetic or underscore (_) character, and must contain only ASCII alphanumeric, underscore, hash (#), period (.), space, colon (:), at (@), equals (=), and hyphen (-) characters.'
   end
-
 end

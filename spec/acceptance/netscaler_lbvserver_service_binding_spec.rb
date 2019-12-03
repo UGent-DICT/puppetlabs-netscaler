@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'lbvserver_service_binding tests' do
   it 'makes a lbvserver_service_binding' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_10_server1':
         ensure  => present,
         address => '1.10.1.1',
@@ -30,12 +30,12 @@ describe 'lbvserver_service_binding tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a lbvserver_service_binding' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_10_server2':
         ensure  => present,
         address => '1.10.2.1',
@@ -63,15 +63,15 @@ describe 'lbvserver_service_binding tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_lbvserver_service_binding { '1_10_lbvserver2/1_10_service2':
         ensure => 'absent',
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

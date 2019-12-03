@@ -1,8 +1,8 @@
 require_relative '../../../puppet/provider/netscaler'
 
-Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "snmpalarm"
+    'snmpalarm'
   end
 
   def self.instances
@@ -11,16 +11,14 @@ Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provi
     return [] if alarms.nil?
 
     alarms.each do |alarm|
-      instances << new({
-        :ensure           => :present,
-        :name             => alarm['trapname'],
-        :alarm_threshold  => alarm['thresholdvalue'],
-        :normal_threshold => alarm['normalvalue'],
-        :severity         => alarm['severity'],
-        :time_interval    => alarm['time'],
-        :state            => alarm['state'],
-        :logging          => alarm['logging'],
-      })
+      instances << new(ensure: :present,
+                       name: alarm['trapname'],
+                       alarm_threshold: alarm['thresholdvalue'],
+                       normal_threshold: alarm['normalvalue'],
+                       severity: alarm['severity'],
+                       time_interval: alarm['time'],
+                       state: alarm['state'],
+                       logging: alarm['logging'])
     end
 
     instances
@@ -31,10 +29,10 @@ Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provi
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name             => :trapname,
-      :alarm_threshold  => :thresholdvalue,
-      :normal_threshold => :normalvalue,
-      :time_interval    => :time,
+      name: :trapname,
+      alarm_threshold: :thresholdvalue,
+      normal_threshold: :normalvalue,
+      time_interval: :time,
     }
   end
 
@@ -42,10 +40,11 @@ Puppet::Type.type(:netscaler_snmpalarm).provide(:rest, {:parent => Puppet::Provi
     [
     ]
   end
+
   def flush_state_args
     {
-      :name_key => 'trapname',
-      :name_val => resource[:name],
+      name_key: 'trapname',
+      name_val: resource[:name],
     }
   end
 

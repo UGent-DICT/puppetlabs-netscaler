@@ -8,7 +8,7 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
   newproperty(:type) do
     desc "Type of rewrite action. It can be: (replace|insert_http_header|delete_http_header|corrupt_http_header|insert_before|insert_after|delete|replace_http_res).
     For each action type the <target> and <string builder expr> are defined below.
@@ -78,8 +78,8 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
         -search regex(<regular expression>) or -search text(string constant)"
 
     validate do |value|
-      if ! [:noop,:delete,:insert_http_header,:delete_http_header,:corrupt_http_header,:insert_before,:insert_after,:replace,:replace_http_res,:delete_all,:replace_all,:insert_before_all,:insert_after_all,:clientless_vpn_encode,:clientless_vpn_encode_all,:clientless_vpn_decode,:clientless_vpn_decode_all,:insert_sip_header,:delete_sip_header,:corrupt_sip_header,:replace_sip_res,].any?{ |s| s.to_s.eql? value }
-          fail ArgumentError, "Valid options: noop, delete, insert_http_header, delete_http_header, corrupt_http_header, insert_before, insert_after, replace, replace_http_res, delete_all, replace_all, insert_before_all, insert_after_all, clientless_vpn_encode, clientless_vpn_encode_all, clientless_vpn_decode, clientless_vpn_decode_all, insert_sip_header, delete_sip_header, corrupt_sip_header, replace_sip_res"
+      if [:noop, :delete, :insert_http_header, :delete_http_header, :corrupt_http_header, :insert_before, :insert_after, :replace, :replace_http_res, :delete_all, :replace_all, :insert_before_all, :insert_after_all, :clientless_vpn_encode, :clientless_vpn_encode_all, :clientless_vpn_decode, :clientless_vpn_decode_all, :insert_sip_header, :delete_sip_header, :corrupt_sip_header, :replace_sip_res].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: noop, delete, insert_http_header, delete_http_header, corrupt_http_header, insert_before, insert_after, replace, replace_http_res, delete_all, replace_all, insert_before_all, insert_after_all, clientless_vpn_encode, clientless_vpn_encode_all, clientless_vpn_decode, clientless_vpn_decode_all, insert_sip_header, delete_sip_header, corrupt_sip_header, replace_sip_res'
       end
     end
 
@@ -87,15 +87,15 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   end
 
   newproperty(:target_expression) do
-    desc "Default syntax expression that specifies which part of the request or response to rewrite."
+    desc 'Default syntax expression that specifies which part of the request or response to rewrite.'
   end
 
   newproperty(:content_expression) do
-     desc "Default syntax expression that specifies the content to insert into the request or response at the specified location, or that replaces the specified string. Applicable for the following types: INSERT_HTTP_HEADER, INSERT_SIP_HEADER, REPLACE, INSERT_BEFORE, INSERT_AFTER, REPLACE_ALL, INSERT_BEFORE_ALL, INSERT_AFTER_ALL."
+    desc 'Default syntax expression that specifies the content to insert into the request or response at the specified location, or that replaces the specified string. Applicable for the following types: INSERT_HTTP_HEADER, INSERT_SIP_HEADER, REPLACE, INSERT_BEFORE, INSERT_AFTER, REPLACE_ALL, INSERT_BEFORE_ALL, INSERT_AFTER_ALL.'
   end
 
   newproperty(:pattern) do
-    desc "Pattern to be used for INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, DELETE_ALL action types."
+    desc 'Pattern to be used for INSERT_BEFORE_ALL, INSERT_AFTER_ALL, REPLACE_ALL, DELETE_ALL action types.'
   end
 
   newproperty(:search) do
@@ -115,8 +115,8 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   search is a super set of pattern. It is advised to use search over pattern."
   end
 
-  newproperty(:bypass_safety_check, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Bypass the safety check and allow unsafe expressions.", 'YES', 'NO')
+  newproperty(:bypass_safety_check, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Bypass the safety check and allow unsafe expressions.', 'YES', 'NO')
   end
 
   newproperty(:refine_search) do
@@ -132,6 +132,6 @@ Puppet::Type.newtype(:netscaler_rewriteaction) do
   end
 
   newproperty(:comments) do
-    desc "Comments associated with this rewrite action."
+    desc 'Comments associated with this rewrite action.'
   end
 end

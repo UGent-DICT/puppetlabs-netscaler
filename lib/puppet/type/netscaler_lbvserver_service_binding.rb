@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_lbvserver_service_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "lbvserver_name/service_name"
+  newparam(:name, namevar: true) do
+    desc 'lbvserver_name/service_name'
   end
 
   newproperty(:weight) do
@@ -15,7 +15,7 @@ Puppet::Type.newtype(:netscaler_lbvserver_service_binding) do
 
 Min = 1
 Max = 100"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end

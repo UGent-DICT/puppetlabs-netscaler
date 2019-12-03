@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "Name of the responder policy."
+  newparam(:name, namevar: true) do
+    desc 'Name of the responder policy.'
   end
 
   newproperty(:priority) do
@@ -15,22 +15,22 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
 
     Min = 1
     Max = 2147483647"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
   newproperty(:goto_expression) do
-    desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE."
+    desc 'Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE.'
   end
 
   newproperty(:invoke_policy_label) do
-    desc "Label of policy to invoke if the bound policy evaluates to true."
+    desc 'Label of policy to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:invoke_vserver_label) do
-    desc "Label of lbvserver to invoke if the bound policy evaluates to true."
+    desc 'Label of lbvserver to invoke if the bound policy evaluates to true.'
   end
 
   autorequire(:netscaler_responderpolicy) do
@@ -49,12 +49,12 @@ Puppet::Type.newtype(:netscaler_responderglobal) do
     self[:invoke_policy_label]
   end
 
- validate do
+  validate do
     if [
       self[:invoke_policy_label],
       self[:invoke_vserver_label],
     ].compact.length > 1
-      err "Only one of invoke_policy_label, or invoke_vserver_label may be specified per bind."
+      err 'Only one of invoke_policy_label, or invoke_vserver_label may be specified per bind.'
     end
   end
 end

@@ -3,19 +3,18 @@ require_relative '../../puppet/provider/netscaler'
 class Puppet::Provider::NetscalerBinding < Puppet::Provider::Netscaler
   def flush
     if @property_hash != {}
-      #XXX Maybe we should delete/create them?
-      err "Bindings may not be modified after creation"
+      # XXX Maybe we should delete/create them?
+      err 'Bindings may not be modified after creation'
     end
   end
 
   def destroy
     toname, fromname = resource.name.split('/').map { |n| URI.escape(n) }
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}",{'args'=>"policyname:#{fromname}"})
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}", 'args' => "policyname:#{fromname}")
     @property_hash.clear
 
-    return result
+    result
   end
-
 
   def immutable_properties
     []

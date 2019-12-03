@@ -9,8 +9,8 @@ Max: 4096'
   end
 
   validate do |value|
-    if ! (value =~ /\d+$/ and Integer(value).between?(0,4094))
-      fail ArgumentError, "traffic_domain_id: Must be an integer between 0-4094"
+    unless value =~ %r{\d+$} && Integer(value).between?(0, 4094)
+      raise ArgumentError, 'traffic_domain_id: Must be an integer between 0-4094'
     end
   end
   munge do |value|

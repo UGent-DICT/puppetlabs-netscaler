@@ -1,9 +1,9 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "rewritepolicy"
+    'rewritepolicy'
   end
 
   def self.instances
@@ -12,15 +12,13 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, {:parent => Puppet::P
     return [] if rewritepolicies.nil?
 
     rewritepolicies.each do |rewritepolicy|
-    instances << new({
-      :ensure                  => :present,
-      :name                    => rewritepolicy['name'],
-      :expression              => rewritepolicy['rule'],
-      :action                  => rewritepolicy['action'],
-      :undefined_result_action => rewritepolicy['undefaction'],
-      :comments                => rewritepolicy['comment'],
-      :log_action              => rewritepolicy['logaction'],
-    })
+      instances << new(ensure: :present,
+                       name: rewritepolicy['name'],
+                       expression: rewritepolicy['rule'],
+                       action: rewritepolicy['action'],
+                       undefined_result_action: rewritepolicy['undefaction'],
+                       comments: rewritepolicy['comment'],
+                       log_action: rewritepolicy['logaction'])
     end
 
     instances
@@ -31,9 +29,9 @@ Puppet::Type.type(:netscaler_rewritepolicy).provide(:rest, {:parent => Puppet::P
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :undefined_result_action => :undefaction,
-      :comments                => :comment,
-      :expression              => :rule,
+      undefined_result_action: :undefaction,
+      comments: :comment,
+      expression: :rule,
     }
   end
 

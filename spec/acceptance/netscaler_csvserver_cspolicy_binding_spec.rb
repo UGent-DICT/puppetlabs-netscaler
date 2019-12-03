@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'csvserver->cspolicy binding' do
   it 'makes a csvserver-cspolicy-binding' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_csvserver { '2_2_csvserver_test1':
   ensure        => 'present',
   service_type  => 'HTTP',
@@ -31,7 +31,7 @@ netscaler_csvserver_cspolicy_binding { '2_2_csvserver_test1/2_2_cspolicy_test1':
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

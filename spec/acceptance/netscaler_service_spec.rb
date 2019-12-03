@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'service tests' do
   it 'makes a service' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_2_server1':
         ensure  => present,
         address => '1.2.1.1',
@@ -17,12 +17,12 @@ describe 'service tests' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and edits a service' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_2_server2':
         ensure  => present,
         address => '1.2.2.1',
@@ -37,7 +37,7 @@ describe 'service tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_service { '1_2_service2':
         ensure      => 'present',
         server_name => '1_2_server2',
@@ -48,14 +48,14 @@ describe 'service tests' do
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a service' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_2_server3':
         ensure  => present,
         address => '1.2.3.1',
@@ -70,21 +70,21 @@ describe 'service tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_service { '1_2_service3':
         ensure      => 'absent',
       }
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and disables/enables a service' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_server { '1_2_server4':
         ensure  => present,
         address => '1.2.4.1',
@@ -100,7 +100,7 @@ describe 'service tests' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_service { '1_2_service4':
         ensure      => 'present',
         server_name => '1_2_server4',
@@ -111,7 +111,7 @@ describe 'service tests' do
       }
     EOS
 
-    pp3=<<-EOS
+    pp3 = <<-EOS
       netscaler_service { '1_2_service4':
         ensure      => 'present',
         server_name => '1_2_server4',
@@ -123,12 +123,12 @@ describe 'service tests' do
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
     make_site_pp(pp3)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

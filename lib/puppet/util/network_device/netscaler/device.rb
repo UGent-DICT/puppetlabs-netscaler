@@ -10,16 +10,16 @@ class Puppet::Util::NetworkDevice::Netscaler::Device
   def initialize(url, options = {})
     @autoloader = Puppet::Util::Autoload.new(
       self,
-      "puppet/util/network_device/transport"
+      'puppet/util/network_device/transport',
     )
-    if @autoloader.load("netscaler", Puppet.lookup(:current_environment))
-      @transport = Puppet::Util::NetworkDevice::Transport::Netscaler.new(url,options[:debug])
+    if @autoloader.load('netscaler', Puppet.lookup(:current_environment))
+      @transport = Puppet::Util::NetworkDevice::Transport::Netscaler.new(url, options[:debug])
     end
   end
 
   def facts
     @facts ||= Puppet::Util::NetworkDevice::Netscaler::Facts.new(@transport)
 
-    return @facts.retrieve
+    @facts.retrieve
   end
 end

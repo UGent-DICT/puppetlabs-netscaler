@@ -1,9 +1,9 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_csaction).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_csaction).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "csaction"
+    'csaction'
   end
 
   def self.instances
@@ -12,13 +12,11 @@ Puppet::Type.type(:netscaler_csaction).provide(:rest, {:parent => Puppet::Provid
     return [] if csactions.nil?
 
     csactions.each do |csaction|
-      instances << new({
-        :ensure               => :present,
-        :name                 => csaction['name'],
-        :target_lbvserver     => csaction['targetlbvserver'],
-        :target_lb_expression => csaction['targetvserverexpr'],
-        :comments             => csaction['comment'],
-      })
+      instances << new(ensure: :present,
+                       name: csaction['name'],
+                       target_lbvserver: csaction['targetlbvserver'],
+                       target_lb_expression: csaction['targetvserverexpr'],
+                       comments: csaction['comment'])
     end
 
     instances
@@ -29,21 +27,21 @@ Puppet::Type.type(:netscaler_csaction).provide(:rest, {:parent => Puppet::Provid
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :target_lb_expression => :targetvserverexpr,
-      :comments             => :comment,
+      target_lb_expression: :targetvserverexpr,
+      comments: :comment,
     }
   end
 
   def immutable_properties
     [
-      :type
+      :type,
     ]
   end
 
   def per_provider_munge(message)
-    if (message[:target_lb_expression] and @original_values[:target_lbvserver]) or
-       (message[:target_lbvserver] and @original_values[:target_lb_expression])
-      fail "Cannot change csaction resource from a target lbvserver to a target lb expression or vice versa."
+    if (message[:target_lb_expression] && @original_values[:target_lbvserver]) ||
+       (message[:target_lbvserver] && @original_values[:target_lb_expression])
+      raise 'Cannot change csaction resource from a target lbvserver to a target lb expression or vice versa.'
     end
     message
   end

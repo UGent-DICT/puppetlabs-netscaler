@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_lbvserver_servicegroup_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "lbvserver_name/servicegroup_name"
+  newparam(:name, namevar: true) do
+    desc 'lbvserver_name/servicegroup_name'
   end
 
   autorequire(:netscaler_lbvserver) do

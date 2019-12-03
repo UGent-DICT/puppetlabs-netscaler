@@ -1,26 +1,24 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_cspolicylabel_cspolicy_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
+Puppet::Type.type(:netscaler_cspolicylabel_cspolicy_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
   def netscaler_api_type
-    "cspolicylabel_cspolicy_binding"
+    'cspolicylabel_cspolicy_binding'
   end
 
   def self.instances
     instances = []
-    cspolicylabels = Puppet::Provider::Netscaler.call("/config/cspolicylabel")
+    cspolicylabels = Puppet::Provider::Netscaler.call('/config/cspolicylabel')
     return [] if cspolicylabels.nil?
 
     cspolicylabels.each do |cspolicylabel|
       binds = Puppet::Provider::Netscaler.call("/config/cspolicylabel_cspolicy_binding/#{cspolicylabel['labelname']}") || []
       binds.each do |bind|
-        instances << new({
-          :ensure              => :present,
-          :name                => "#{bind['labelname']}/#{bind['policyname']}",
-          :priority            => bind['priority'],
-          :goto_expression     => bind['gotopriorityexpression'],
-          :invoke_policy_label => bind['invoke_labelname'],
-          :target_lbvserver    => bind['targetvserver'],
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['labelname']}/#{bind['policyname']}",
+                         priority: bind['priority'],
+                         goto_expression: bind['gotopriorityexpression'],
+                         invoke_policy_label: bind['invoke_labelname'],
+                         target_lbvserver: bind['targetvserver'])
       end
     end
 
@@ -31,9 +29,9 @@ Puppet::Type.type(:netscaler_cspolicylabel_cspolicy_binding).provide(:rest, {:pa
 
   def property_to_rest_mapping
     {
-      :goto_expression     => :gotopriorityexpression,
-      :invoke_policy_label => :invoke_labelname,
-      :target_lbvserver    => :targetvserver,
+      goto_expression: :gotopriorityexpression,
+      invoke_policy_label: :invoke_labelname,
+      target_lbvserver: :targetvserver,
     }
   end
 

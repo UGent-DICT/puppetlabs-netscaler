@@ -1,9 +1,9 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "responderpolicylabel"
+    'responderpolicylabel'
   end
 
   def self.instances
@@ -12,12 +12,10 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, {:parent => Pu
     return [] if responderpolicylabels.nil?
 
     responderpolicylabels.each do |responderpolicylabel|
-      instances << new({
-        :ensure   => :present,
-        :name     => responderpolicylabel['labelname'],
-        :type     => responderpolicylabel['policylabeltype'],
-        :comments => responderpolicylabel['comment'],
-      })
+      instances << new(ensure: :present,
+                       name: responderpolicylabel['labelname'],
+                       type: responderpolicylabel['policylabeltype'],
+                       comments: responderpolicylabel['comment'])
     end
 
     instances
@@ -28,16 +26,16 @@ Puppet::Type.type(:netscaler_responderpolicylabel).provide(:rest, {:parent => Pu
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name     => :labelname,
-      :type     => :policylabeltype,
-      :comments => :comment,
+      name: :labelname,
+      type: :policylabeltype,
+      comments: :comment,
     }
   end
 
   def immutable_properties
     [
       :type,
-      :comments, 
+      :comments,
     ]
   end
 

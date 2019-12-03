@@ -1,10 +1,10 @@
 Puppet::Type.newtype(:netscaler_feature) do
   desc 'Netscaler features'
-  
+
   apply_to_device
 
   ensurable
-  
+
   def self.rest_name_map
     {
       'wl'                 => 'Web Logging',
@@ -43,22 +43,22 @@ Puppet::Type.newtype(:netscaler_feature) do
       'feo'                => 'Front End Optimization',
     }
   end
-  
-  newparam(:name, :namevar => true) do
+
+  newparam(:name, namevar: true) do
     desc 'Feature name'
 
     validate do |value|
-      if ! Puppet::Type::Netscaler_feature.rest_name_map.values.any?{ |s| s <=> value }
-        fail ArgumentError, "Valid options: " + Puppet::Type::Netscaler_feature.rest_name_map.values.to_s
+      if Puppet::Type::Netscaler_feature.rest_name_map.values.none? { |s| s <=> value }
+        raise ArgumentError, 'Valid options: ' + Puppet::Type::Netscaler_feature.rest_name_map.values.to_s
       end
-    end    
+    end
   end
-  
+
   def self.title_patterns
-    key_pattern =  self.rest_name_map.keys.join('|')
-    [ 
-      [ /^(#{key_pattern})$/i, [ [ :name, Proc.new { |value|  self.rest_name_map[value.downcase] } ] ] ] ,
-      [ /(.*)/m, [ [ :name ] ] ]
+    key_pattern = rest_name_map.keys.join('|')
+    [
+      [%r{^(#{key_pattern})$}i, [[:name, proc { |value| rest_name_map[value.downcase] }]]],
+      [%r{(.*)}m, [[:name]]],
     ]
   end
 end

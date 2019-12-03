@@ -1,10 +1,10 @@
 require 'spec_helper_acceptance'
 
 describe 'sslcertkey' do
-  #we need to upload a key and cert file, for this test to work
+  # we need to upload a key and cert file, for this test to work
 
   it 'add in a cert and a key file' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_file { 'server.cert':
         ensure       => 'present',
         content  => '-----BEGIN CERTIFICATE-----
@@ -48,12 +48,12 @@ ZBj6w+FfJd5K+FeKSA1uJc2Jf1jc9qoKcMK/fOeP3jhvoQ==
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a sslcertkey' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_sslcertkey { 'test_sslcertkey':
   ensure                => 'present',
   certificate_filename  => '/nsconfig/server.cert',
@@ -63,18 +63,18 @@ netscaler_sslcertkey { 'test_sslcertkey':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'deletes a sslcertkey' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_sslcertkey { 'test_sslcertkey':
   ensure                => 'absent',
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

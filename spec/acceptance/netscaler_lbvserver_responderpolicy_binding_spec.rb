@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'lbvserver-responderpolicy-binding' do
   it 'makes a lbvserver-responderpolicy-binding (no invoke)' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_responderpolicy { '1_9_responderpolicy_test1':
         ensure                  => 'present',
         action                  => 'NOOP',
@@ -25,12 +25,12 @@ describe 'lbvserver-responderpolicy-binding' do
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a lbvserver-responderpolicy-binding (no invoke)' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_responderpolicy { '1_9_responderpolicy_test2':
         ensure                  => 'present',
         action                  => 'NOOP',
@@ -53,21 +53,21 @@ describe 'lbvserver-responderpolicy-binding' do
       }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_lbvserver_responderpolicy_binding { '1_9_lbvserver_test2/1_9_responderpolicy_test2':
         ensure    => absent,
         priority  => 1,
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
-    it 'makes a lbvserver-responderpolicy-binding (resvserver)' do
-    pp=<<-EOS
+  it 'makes a lbvserver-responderpolicy-binding (resvserver)' do
+    pp = <<-EOS
 netscaler_responderpolicy { '1_9_responderpolicy_test3':
   ensure                  => 'present',
   action                  => 'NOOP',
@@ -99,7 +99,7 @@ netscaler_lbvserver_responderpolicy_binding { '1_9_lbvserver_test3/1_9_responder
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

@@ -10,12 +10,12 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
 
   ## creation properties
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
 
   newproperty(:protocol) do
     desc 'Protocol in which data is exchanged with the service group. Required.'
     validate do |value|
-      if ! [
+      if [
         :ADNS,
         :ADNS_TCP,
         :ANY,
@@ -43,26 +43,26 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
         :TCP,
         :TFTP,
         :UDP,
-      ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, RPCSVR, DNS, ADNS, SNMP, RTSP, DHCPRA, ANY, SIP_UDP, DNS_TCP, ADNS_TCP, MYSQL, MSSQL, ORACLE, RADIUS, RDP, DIAMETER, SSL_DIAMETER, TFTP"
+      ].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: HTTP, FTP, TCP, UDP, SSL, SSL_BRIDGE, SSL_TCP, DTLS, NNTP, RPCSVR, DNS, ADNS, SNMP, RTSP, DHCPRA, ANY, SIP_UDP, DNS_TCP, ADNS_TCP, MYSQL, MSSQL, ORACLE, RADIUS, RDP, DIAMETER, SSL_DIAMETER, TFTP'
       end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:traffic_domain_id, :parent => Puppet::Property::NetscalerTrafficDomain)
+  newproperty(:traffic_domain_id, parent: Puppet::Property::NetscalerTrafficDomain)
 
   newproperty(:cache_type) do
-    desc "Cache type supported by the cache server."
+    desc 'Cache type supported by the cache server.'
     validate do |value|
-      if ! [
+      if [
         :SERVER,
         :TRANSPARENT,
         :REVERSE,
         :FORWARD,
-      ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: SERVER, TRANSPARENT, REVERSE, FORWARD"
+      ].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: SERVER, TRANSPARENT, REVERSE, FORWARD'
       end
     end
 
@@ -70,14 +70,14 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
   end
 
   newproperty(:autoscale_mode) do
-    desc "Auto scale option for a servicegroup."
+    desc 'Auto scale option for a servicegroup.'
     validate do |value|
-      if ! [
+      if [
         :DISABLED,
         :DNS,
         :POLICY,
-      ].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: DISABLED, DNS, POLICY"
+      ].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: DISABLED, DNS, POLICY'
       end
     end
 
@@ -85,10 +85,10 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
   end
 
   newproperty(:member_port) do
-    desc "The port for the service group members. Only valid when autoscale_mode is POLICY."
+    desc 'The port for the service group members. Only valid when autoscale_mode is POLICY.'
     validate do |value|
-      if ! (value =~ /^\d+$/ and Integer(value).between?(1,65535))
-        fail ArgumentError, "member_port: #{value} is not a valid port."
+      unless value =~ %r{^\d+$} && Integer(value).between?(1, 65_535)
+        raise ArgumentError, "member_port: #{value} is not a valid port."
       end
     end
     munge do |value|
@@ -96,26 +96,26 @@ Puppet::Type.newtype(:netscaler_servicegroup) do
     end
   end
 
-  newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:cacheable, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("Use the transparent cache redirection virtual server to forward requests to the cache server. May not be specified if cache_type is 'TRANSPARENT', 'REVERSE', or 'FORWARD'", 'YES', 'NO')
   end
 
-  newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("The state of the object.", 'ENABLED', 'DISABLED')
+  newproperty(:state, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The state of the object.', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:health_monitoring, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:health_monitoring, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("Monitor the health of this service. Available settings function as follows:
 YES - Send probes to check the health of the service.
 NO - Do not send probes to check the health of the service. With the NO option, the appliance shows the service as UP at all times.", 'YES', 'NO')
   end
 
-  newproperty(:appflow_logging, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Enable logging of AppFlow information.", 'ENABLED', 'DISABLED')
+  newproperty(:appflow_logging, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Enable logging of AppFlow information.', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:comments) do
-    desc "Any information about the object."
+    desc 'Any information about the object.'
   end
 
   ## Threshold and timeouts
@@ -132,7 +132,7 @@ Max = 65535"
   end
 
   newproperty(:max_requests) do
-    desc "Maximum number of requests that can be sent on a persistent connection to the service. 
+    desc "Maximum number of requests that can be sent on a persistent connection to the service.
 Note: Connection requests beyond this value are rejected.
 
 Max = 65535"
@@ -149,8 +149,8 @@ Max = 4294967294"
 
 Max = 31536000"
     validate do |value|
-      if ! value =~ /^\d+$/
-        fail ArgumentError, "client_idle_timeout: #{value} is not a valid integer."
+      if !value =~ %r{^\d+$}
+        raise ArgumentError, "client_idle_timeout: #{value} is not a valid integer."
       end
     end
     munge do |value|
@@ -163,8 +163,8 @@ Max = 31536000"
 
 Max = 31536000"
     validate do |value|
-      if ! value =~ /^\d+$/
-        fail ArgumentError, "server_idle_timeout: #{value} is not a valid integer."
+      if !value =~ %r{^\d+$}
+        raise ArgumentError, "server_idle_timeout: #{value} is not a valid integer."
       end
     end
     munge do |value|
@@ -174,69 +174,69 @@ Max = 31536000"
 
   ## settings
 
-  newproperty(:sure_connect, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("State of SureConnect for the service.", 'ON', 'OFF')
+  newproperty(:sure_connect, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('State of SureConnect for the service.', 'ON', 'OFF')
   end
 
-  newproperty(:surge_protection, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Enable surge protection for the service.", 'ON', 'OFF')
+  newproperty(:surge_protection, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Enable surge protection for the service.', 'ON', 'OFF')
   end
 
-  newproperty(:use_proxy_port, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:use_proxy_port, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("Use the proxy port as the source port when initiating connections with the server. With the NO setting, the client-side connection port is used as the source port for the server-side connection.
 Note: This parameter is available only when the Use Source IP (USIP) parameter is set to YES.", 'YES', 'NO')
   end
 
-  newproperty(:down_state_flush, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Flush all active transactions associated with a service whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.", 'ENABLED', 'DISABLED')
+  newproperty(:down_state_flush, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Flush all active transactions associated with a service whose state transitions from UP to DOWN. Do not enable this option for applications that must complete their transactions.', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:use_client_ip, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:use_client_ip, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("Use the client's IP address as the source IP address when initiating a connection to the server. When creating a service, if you do not set this parameter, the service inherits the global Use Source IP setting (available in the enable ns mode and disable ns mode CLI commands, or in the System > Settings > Configure modes > Configure Modes dialog box). However, you can override this setting after you create the service.", 'YES', 'NO')
   end
 
-  newproperty(:client_keepalive, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Enable client keep-alive for the service.", :'YES', 'NO')
+  newproperty(:client_keepalive, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Enable client keep-alive for the service.', :YES, 'NO')
   end
 
-  newproperty(:tcp_buffering, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Enable TCP buffering for the service.", 'YES', 'NO')
+  newproperty(:tcp_buffering, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Enable TCP buffering for the service.', 'YES', 'NO')
   end
 
-  newproperty(:http_compression, :parent => Puppet::Property::NetscalerTruthy) do
-    desc "Enable compression for the specified service."
+  newproperty(:http_compression, parent: Puppet::Property::NetscalerTruthy) do
+    desc 'Enable compression for the specified service.'
   end
 
-  newproperty(:client_ip, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:client_ip, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("Before forwarding a request to the service, insert an HTTP header with the client's IPv4 or IPv6 address as its value. Used if the server needs the client's IP address for security, accounting, or other purposes, and setting the Use Source IP parameter is not a viable option.", 'ENABLED', 'DISABLED')
   end
 
   newproperty(:client_ip_header) do
-    desc "Name for the HTTP header whose value must be set to the IP address of the client. Used with the Client IP parameter. If you set the Client IP parameter, and you do not specify a name for the header, the appliance uses the header name specified for the global Client IP Header parameter (the cipHeader parameter in the set ns param CLI command or the Client IP Header parameter in the Configure HTTP Parameters dialog box at System > Settings > Change HTTP parameters). If the global Client IP Header parameter is not specified, the appliance inserts a header with the name \"client-ip.\""
+    desc 'Name for the HTTP header whose value must be set to the IP address of the client. Used with the Client IP parameter. If you set the Client IP parameter, and you do not specify a name for the header, the appliance uses the header name specified for the global Client IP Header parameter (the cipHeader parameter in the set ns param CLI command or the Client IP Header parameter in the Configure HTTP Parameters dialog box at System > Settings > Change HTTP parameters). If the global Client IP Header parameter is not specified, the appliance inserts a header with the name "client-ip."'
   end
 
   ## profiles
 
   newproperty(:tcp_profile) do
-    desc "Name of the TCP profile that contains TCP configuration settings for the service group."
+    desc 'Name of the TCP profile that contains TCP configuration settings for the service group.'
   end
 
   newproperty(:http_profile) do
-    desc "Name of the HTTP profile that contains HTTP configuration settings for the service group."
+    desc 'Name of the HTTP profile that contains HTTP configuration settings for the service group.'
   end
 
   newproperty(:net_profile) do
-    desc "Network profile for the service group."
+    desc 'Network profile for the service group.'
   end
 
   ## Extra properties follow
-  newparam(:graceful_shutdown, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Indicates graceful shutdown of the server. System will wait for all outstanding connections to this server to be closed before disabling the server.", "YES", "NO")
+  newparam(:graceful_shutdown, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Indicates graceful shutdown of the server. System will wait for all outstanding connections to this server to be closed before disabling the server.', 'YES', 'NO')
   end
 
   validate do
-    if self[:member_port] and self[:autoscale_mode] != 'POLICY'
-      err "Setting member_port requires autoscale_mode of POLICY"
+    if self[:member_port] && self[:autoscale_mode] != 'POLICY'
+      err 'Setting member_port requires autoscale_mode of POLICY'
     end
   end
 end

@@ -9,25 +9,23 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
     require 'uri'
     require 'faraday'
     require 'puppet/util/network_device/transport/do_not_encoder'
-    @connection = Faraday.new({:url => url, :ssl => { :verify => false }}) do |builder|
-      builder.request :retry, {
-        :max                 => 10,
-        :interval            => 0.05,
-        :interval_randomness => 0.5,
-        :backoff_factor      => 2,
-        :exceptions          => [
-          Faraday::Error::TimeoutError,
-          Faraday::ConnectionFailed,
-          Errno::ETIMEDOUT,
-          'Timeout::Error',
-        ],
-      }
+    @connection = Faraday.new(url: url, ssl: { verify: false }) do |builder|
+      builder.request :retry, max: 10,
+                              interval: 0.05,
+                              interval_randomness: 0.5,
+                              backoff_factor: 2,
+                              exceptions: [
+                                Faraday::Error::TimeoutError,
+                                Faraday::ConnectionFailed,
+                                Errno::ETIMEDOUT,
+                                'Timeout::Error',
+                              ]
       builder.adapter :net_http
       builder.options.params_encoder = Puppet::Util::NetworkDevice::Transport::DoNotEncoder
     end
   end
 
-  def call(url=nil, args={})
+  def call(url = nil, args = {})
     url = URI.escape(url) if url
     result = connection.get("/nitro/v1#{url}", args)
     type = url.split('/')[1]
@@ -42,12 +40,12 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def failure?(result)
-    unless result.status == 200 or result.status == 201
-      fail("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}")
+    unless result.status == 200 || result.status == 201
+      raise("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}")
     end
   end
 
-  def post(url, json, args={})
+  def post(url, json, args = {})
     url = URI.escape(url) if url
     resource_type = url.split('/')[2]
     if valid_json?(json)
@@ -59,7 +57,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
       failure?(result)
       return result
     else
-      fail('Invalid JSON detected.')
+      raise('Invalid JSON detected.')
     end
   end
 
@@ -75,19 +73,19 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
       failure?(result)
       return result
     else
-      fail('Invalid JSON detected.')
+      raise('Invalid JSON detected.')
     end
   end
 
-  def delete(url,args={})
+  def delete(url, args = {})
     url = URI.escape(url) if url
     result = connection.delete do |req|
       # https://github.com/lostisland/faraday/issues/465
-      #req.options.params_encoder = Puppet::Util::NetworkDevice::Transport::DoNotEncoder
+      # req.options.params_encoder = Puppet::Util::NetworkDevice::Transport::DoNotEncoder
       req.url "/nitro/v1#{url}", args
     end
     failure?(result)
-    return result
+    result
   end
 
   def valid_json?(json)
@@ -99,7 +97,7 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
 
   ## Given a string containing objects matching /Partition/Object, return an
   ## array of all found objects.
-  #def find_monitors(string)
+  # def find_monitors(string)
   #  return nil if string.nil?
   #  if string == "default"
   #    ["default"]
@@ -108,10 +106,10 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   #  else
   #    string.scan(/(\/\S+)/).flatten
   #  end
-  #end
+  # end
 
   ## Monitoring:  Parse out the availability integer.
-  #def find_availability(string)
+  # def find_availability(string)
   #  return nil if string.nil?
   #  if string == "default" or string == "none"
   #    return nil
@@ -123,5 +121,5 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   #  else
   #    "all"
   #  end
-  #end
+  # end
 end

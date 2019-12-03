@@ -1,8 +1,8 @@
 require 'spec_helper_acceptance'
-#this is a special case, where the binding is created when the csvserver is created. the binding to the lbvserver
+# this is a special case, where the binding is created when the csvserver is created. the binding to the lbvserver
 describe 'csvserver-lbvserver-binding' do
   it 'makes a csvserver-lbvserver-binding' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_csvserver { '2_17_csvserver_test1':
   ensure            => 'present',
   service_type      => 'HTTP',
@@ -21,12 +21,12 @@ netscaler_lbvserver { '2_17_lbvserver_test1':
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and edits a csvserver-lbvserver-binding' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_csvserver { '2_17_csvserver_test2':
   ensure            => 'present',
   service_type      => 'HTTP',
@@ -45,7 +45,7 @@ netscaler_lbvserver { '2_17_lbvserver_test2_1':
 }
 EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
 netscaler_csvserver { '2_17_csvserver_test2':
   ensure            => 'present',
   service_type      => 'HTTP',
@@ -64,9 +64,9 @@ netscaler_lbvserver { '2_17_lbvserver_test2_2':
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

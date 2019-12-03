@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_servicegroup_lbmonitor_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "servicegroup_name/lbmonitor_name"
+  newparam(:name, namevar: true) do
+    desc 'servicegroup_name/lbmonitor_name'
   end
 
   newproperty(:weight) do
@@ -15,21 +15,21 @@ Puppet::Type.newtype(:netscaler_servicegroup_lbmonitor_binding) do
 
     Min = 1
     Max = 100"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
-  newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property('The configured state (enable/disable) of the bound monitor.','ENABLED','DISABLED')
+  newproperty(:state, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The configured state (enable/disable) of the bound monitor.', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:passive, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property('Indicates if the monitor is passive. A passive monitor does not remove servicegroup from LB decision when the threshold is breached.','true','false')
+  newproperty(:passive, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Indicates if the monitor is passive. A passive monitor does not remove servicegroup from LB decision when the threshold is breached.', 'true', 'false')
 
     munge do |value|
-      value.downcase == 'true'
+      value.casecmp('true').zero?
     end
   end
 

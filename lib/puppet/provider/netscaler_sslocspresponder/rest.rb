@@ -1,9 +1,9 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_sslocspresponder).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_sslocspresponder).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "sslocspresponder"
+    'sslocspresponder'
   end
 
   def self.instances
@@ -12,11 +12,9 @@ Puppet::Type.type(:netscaler_sslocspresponder).provide(:rest, {:parent => Puppet
     return [] if sslocspresponders.nil?
 
     sslocspresponders.each do |sslocspresponder|
-      instances << new({
-        :ensure => :present,
-        :name   => sslocspresponder['name'],
-        :url    => sslocspresponder['url'],
-      })
+      instances << new(ensure: :present,
+                       name: sslocspresponder['name'],
+                       url: sslocspresponder['url'])
     end
 
     instances
@@ -27,19 +25,19 @@ Puppet::Type.type(:netscaler_sslocspresponder).provide(:rest, {:parent => Puppet
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-    :name                         => :name,
-    :url                          => :url,
-    :cache                        => :cache,
-    :cache_timeout                => :cachetimeout,
-    :batching_depth               => :batchingdepth,
-    :batching_delay               => :batchingdelay,
-    :request_timeout              => :resptimeout,
-    :certificate                  => :respondercert,
-    :trust_responses              => :trustresponder,
-    :produced_at_time_skew        => :producedattimeskew,
-    :signing_certificate          => :signingcert,
-    :nonce                        => :useonce,
-    :client_certificate_insertion => :insertclientcert,
+      name: :name,
+      url: :url,
+      cache: :cache,
+      cache_timeout: :cachetimeout,
+      batching_depth: :batchingdepth,
+      batching_delay: :batchingdelay,
+      request_timeout: :resptimeout,
+      certificate: :respondercert,
+      trust_responses: :trustresponder,
+      produced_at_time_skew: :producedattimeskew,
+      signing_certificate: :signingcert,
+      nonce: :useonce,
+      client_certificate_insertion: :insertclientcert,
     }
   end
 

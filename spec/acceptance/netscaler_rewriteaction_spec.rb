@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'rewriteaction' do
   it 'makes a rewriteaction 1' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test1':
   ensure              => 'present',
   type                => 'insert_http_header',
@@ -13,12 +13,12 @@ netscaler_rewriteaction { '2_9_rewriteaction_test1':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a rewriteaction 2' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test2':
   ensure              => 'present',
   type                => 'insert_after',
@@ -29,12 +29,12 @@ netscaler_rewriteaction { '2_9_rewriteaction_test2':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a rewriteaction 3' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test3':
   ensure              => 'present',
   type                => 'insert_before_all',
@@ -47,12 +47,12 @@ netscaler_rewriteaction { '2_9_rewriteaction_test3':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a rewriteaction 4' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test4':
   ensure              => 'present',
   type                => 'insert_before_all',
@@ -65,12 +65,12 @@ netscaler_rewriteaction { '2_9_rewriteaction_test4':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes javascript rewriteaction' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { 'my_rw_default_insert_after_body':
   ensure              => 'present',
   bypass_safety_check => 'NO',
@@ -80,20 +80,20 @@ netscaler_rewriteaction { 'my_rw_default_insert_after_body':
 }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
 netscaler_rewriteaction { 'my_rw_contains_javascript':
   ensure              => 'absent',
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes another rewriteaction' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test5':
   ensure              => 'present',
   type                => 'insert_before_all',
@@ -106,16 +106,16 @@ netscaler_rewriteaction { '2_9_rewriteaction_test5':
 }
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
 netscaler_rewriteaction { '2_9_rewriteaction_test5':
   ensure              => 'absent',
 }
     EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

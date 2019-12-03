@@ -1,26 +1,24 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_cspolicy).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_cspolicy).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "cspolicy"
+    'cspolicy'
   end
 
   def self.instances
     instances = []
     cspolicys = Puppet::Provider::Netscaler.call('/config/cspolicy')
-    return [] if  cspolicys.nil?
+    return [] if cspolicys.nil?
 
     cspolicys.each do |cspolicy|
-      instances << new({
-        :ensure     => :present,
-        :name       => cspolicy['policyname'],
-        :action     => cspolicy['action'],
-        :log_action => cspolicy['logaction'],
-        :url        => cspolicy['url'],
-        :domain     => cspolicy['domain'],
-        :expression => cspolicy['rule'],
-      })
+      instances << new(ensure: :present,
+                       name: cspolicy['policyname'],
+                       action: cspolicy['action'],
+                       log_action: cspolicy['logaction'],
+                       url: cspolicy['url'],
+                       domain: cspolicy['domain'],
+                       expression: cspolicy['rule'])
     end
 
     instances
@@ -31,8 +29,8 @@ Puppet::Type.type(:netscaler_cspolicy).provide(:rest, {:parent => Puppet::Provid
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :name       => :policyname,
-      :expression => :rule,
+      name: :policyname,
+      expression: :rule,
     }
   end
 

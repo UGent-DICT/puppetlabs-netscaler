@@ -7,18 +7,18 @@ Puppet::Type.newtype(:netscaler_csaction) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
 
   newproperty(:target_lbvserver) do
-    desc "Name of the load balancing virtual server to which the content is switched."
+    desc 'Name of the load balancing virtual server to which the content is switched.'
   end
 
   newproperty(:target_lb_expression) do
-    desc "Information about this content switching action."
+    desc 'Information about this content switching action.'
   end
 
   newproperty(:comments) do
-    desc "Any information about the responder action."
+    desc 'Any information about the responder action.'
   end
 
   autorequire(:netscaler_lbvserver) do

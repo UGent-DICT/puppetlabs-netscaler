@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_csvserver_responderpolicy_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "csvserver_name/policy_name"
+  newparam(:name, namevar: true) do
+    desc 'csvserver_name/policy_name'
   end
 
   newproperty(:priority) do
@@ -15,22 +15,22 @@ Puppet::Type.newtype(:netscaler_csvserver_responderpolicy_binding) do
 
 Min = 1
 Max = 2147483647"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
   newproperty(:goto_expression) do
-    desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE"
+    desc 'Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE'
   end
 
   newproperty(:invoke_policy_label) do
-    desc "Label of policy to invoke if the bound policy evaluates to true."
+    desc 'Label of policy to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:invoke_vserver_label) do
-    desc "Label of vserver to invoke if the bound policy evaluates to true."
+    desc 'Label of vserver to invoke if the bound policy evaluates to true.'
   end
 
   autorequire(:netscaler_csvserver) do
@@ -54,7 +54,7 @@ Max = 2147483647"
       self[:invoke_policy_label],
       self[:invoke_vserver_label],
     ].compact.length > 1
-      fail "Only one of invoke_policy_label or invoke_vserver_label may be specified per binding."
+      raise 'Only one of invoke_policy_label or invoke_vserver_label may be specified per binding.'
     end
   end
 end

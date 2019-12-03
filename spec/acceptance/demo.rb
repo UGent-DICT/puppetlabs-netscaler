@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'This is a demo of some netscaler functionality' do
   it 'running a complex manifest' do
-    pp=<<-EOS
+    pp = <<-EOS
 # basic netscaler config - user / group / usergroup / ntpserver / timezone / snmpalarm / hostname
 netscaler_user { 'joe':
   ensure                  => 'present',
@@ -98,7 +98,7 @@ netscaler_nsip { '3.1.2.1':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

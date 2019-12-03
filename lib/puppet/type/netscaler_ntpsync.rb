@@ -14,8 +14,8 @@ Puppet::Type.newtype(:netscaler_ntpsync) do
     end
   end
 
-  newparam(:state, :parent => Puppet::Property::NetscalerTruthy, :namevar => true) do
+  newparam(:state, parent: Puppet::Property::NetscalerTruthy, namevar: true) do
     truthy_property("NTP status.
-    Possible values = ENABLED, DISABLED","ENABLED","DISABLED")
+    Possible values = ENABLED, DISABLED", 'ENABLED', 'DISABLED')
   end
 end

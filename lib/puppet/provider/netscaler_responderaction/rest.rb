@@ -1,9 +1,9 @@
 require_relative '../../../puppet/provider/netscaler'
 require 'json'
 
-Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_responderaction).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "responderaction"
+    'responderaction'
   end
 
   def self.instances
@@ -12,16 +12,14 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet:
     return [] if responderactions.nil?
 
     responderactions.each do |responderaction|
-      instances << new({
-        :ensure               => :present,
-        :name                 => responderaction['name'],
-        :type                 => responderaction['type'],
-        :expression           => responderaction['target'],
-        :bypass_safety_check  => responderaction['bypasssafetycheck'],
-        :comments             => responderaction['comment'],
-        :response_status_code => responderaction['responsestatuscode'],
-        :html_page            => responderaction['htmlpage'],
-      })
+      instances << new(ensure: :present,
+                       name: responderaction['name'],
+                       type: responderaction['type'],
+                       expression: responderaction['target'],
+                       bypass_safety_check: responderaction['bypasssafetycheck'],
+                       comments: responderaction['comment'],
+                       response_status_code: responderaction['responsestatuscode'],
+                       html_page: responderaction['htmlpage'])
     end
 
     instances
@@ -32,16 +30,16 @@ Puppet::Type.type(:netscaler_responderaction).provide(:rest, {:parent => Puppet:
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-      :expression           => :target,
-      :comments             => :comment,
-      :response_status_code => :responsestatuscode,
-      :html_page            => :htmlpage,
+      expression: :target,
+      comments: :comment,
+      response_status_code: :responsestatuscode,
+      html_page: :htmlpage,
     }
   end
 
   def immutable_properties
     [
-      :type
+      :type,
     ]
   end
 

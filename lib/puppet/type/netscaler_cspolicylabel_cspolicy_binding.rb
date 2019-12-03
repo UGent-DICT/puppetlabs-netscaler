@@ -6,28 +6,28 @@ Puppet::Type.newtype(:netscaler_cspolicylabel_cspolicy_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "cspolicylabel_name/cspolicy_name"
+  newparam(:name, namevar: true) do
+    desc 'cspolicylabel_name/cspolicy_name'
   end
 
   newproperty(:priority) do
-    desc "Specifies the priority of the policy."
-    newvalues(/^\d+$/)
+    desc 'Specifies the priority of the policy.'
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
   newproperty(:goto_expression) do
-    desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE"
+    desc 'Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE'
   end
 
   newproperty(:invoke_policy_label) do
-    desc "Label of policy to invoke if the bound policy evaluates to true."
+    desc 'Label of policy to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:target_lbvserver) do
-    desc "The virtual server name to which content will be switched."
+    desc 'The virtual server name to which content will be switched.'
   end
 
   autorequire(:netscaler_cspolicylabel) do

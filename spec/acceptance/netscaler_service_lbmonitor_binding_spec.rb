@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'service_lbmonitor_binding tests' do
   it 'makes a service_lbmonitor_binding' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_lbmonitor { '1_3_lbmonitor1':
         ensure            => 'present',
         type              => 'LOAD',
@@ -32,12 +32,12 @@ describe 'service_lbmonitor_binding tests' do
 
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a service_lbmonitor_binding' do
-    pp=<<-EOS
+    pp = <<-EOS
       netscaler_lbmonitor { '1_3_lbmonitor2':
         ensure            => 'present',
         type              => 'LOAD',
@@ -67,15 +67,15 @@ describe 'service_lbmonitor_binding tests' do
 
     EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
       netscaler_service_lbmonitor_binding { '1_3_service2/1_3_lbmonitor2':
         ensure  => 'absent',
       }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

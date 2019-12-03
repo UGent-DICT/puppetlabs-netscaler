@@ -7,19 +7,19 @@ Puppet::Type.newtype(:netscaler_config) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do  
-    desc "default"
+  newparam(:name, namevar: true) do
+    desc 'default'
   end
 
-  newproperty(:ipaddress) do  
-    desc "IP address of the NetScaler appliance. Commonly referred to as NSIP address. This parameter is mandatory to bring up the appliance."
+  newproperty(:ipaddress) do
+    desc 'IP address of the NetScaler appliance. Commonly referred to as NSIP address. This parameter is mandatory to bring up the appliance.'
   end
 
   newproperty(:netmask) do
-    desc "Netmask corresponding to the IP address. This parameter is mandatory to bring up the appliance."
+    desc 'Netmask corresponding to the IP address. This parameter is mandatory to bring up the appliance.'
   end
 
-  newproperty(:nsvlan) do 
+  newproperty(:nsvlan) do
     desc "(NSVLAN) for the subnet on which the IP address resides.
 Minimum value = 2
 Maximum value = 4094"
@@ -98,7 +98,7 @@ Maximum length = 65535"
   end
 
   newproperty(:timezone) do
-    desc "Name of the timezone."
+    desc 'Name of the timezone.'
   end
 
   newproperty(:grantquotamaxclient) do

@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_lbvserver_rewritepolicy_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "lbvserver_name/policy_name"
+  newparam(:name, namevar: true) do
+    desc 'lbvserver_name/policy_name'
   end
 
   newproperty(:priority) do
@@ -15,29 +15,29 @@ Puppet::Type.newtype(:netscaler_lbvserver_rewritepolicy_binding) do
 
 Min = 1
 Max = 65536"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
   newproperty(:goto_expression) do
-    desc "Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE"
+    desc 'Expression specifying the priority of the next policy which will get evaluated if the current policy rule evaluates to TRUE'
   end
 
   newproperty(:invoke_policy_label) do
-    desc "Label of policy to invoke if the bound policy evaluates to true."
+    desc 'Label of policy to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:invoke_vserver_label) do
-    desc "Label of vserver to invoke if the bound policy evaluates to true."
+    desc 'Label of vserver to invoke if the bound policy evaluates to true.'
   end
 
   newproperty(:bind_point) do
-    desc "Bind point to which to bind the policy."
+    desc 'Bind point to which to bind the policy.'
     validate do |value|
-      if ! [:REQUEST, :RESPONSE,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: REQUEST, RESPONSE."
+      if [:REQUEST, :RESPONSE].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: REQUEST, RESPONSE.'
       end
     end
   end
@@ -63,7 +63,7 @@ Max = 65536"
       self[:invoke_policy_label],
       self[:invoke_vserver_label],
     ].compact.length > 1
-      err "Only one of invoke_policy_label or invoke_vserver_label may be specified per binding."
+      err 'Only one of invoke_policy_label or invoke_vserver_label may be specified per binding.'
     end
   end
 end

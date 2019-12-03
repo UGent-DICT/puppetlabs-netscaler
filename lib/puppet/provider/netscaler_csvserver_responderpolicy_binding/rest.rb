@@ -1,32 +1,30 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_csvserver_responderpolicy_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
+Puppet::Type.type(:netscaler_csvserver_responderpolicy_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
   def netscaler_api_type
-    "csvserver_responderpolicy_binding"
+    'csvserver_responderpolicy_binding'
   end
 
   def self.instances
     instances = []
-    csvservers = Puppet::Provider::Netscaler.call("/config/csvserver")
+    csvservers = Puppet::Provider::Netscaler.call('/config/csvserver')
     return [] if csvservers.nil?
 
     csvservers.each do |csvserver|
       binds = Puppet::Provider::Netscaler.call("/config/csvserver_responderpolicy_binding/#{csvserver['name']}") || []
       binds.each do |bind|
         case bind['labeltype']
-          when 'reqvserver'
-            vserverlabel = bind['labelname']
-          when 'policylabel'
-            policylabel = bind['labelname']
+        when 'reqvserver'
+          vserverlabel = bind['labelname']
+        when 'policylabel'
+          policylabel = bind['labelname']
         end
-        instances << new({
-          :ensure               => :present,
-          :name                 => "#{bind['name']}/#{bind['policyname']}",
-          :priority             => bind['priority'],
-          :goto_expression      => bind['gotopriorityexpression'],
-          :invoke_policy_label  => policylabel,
-          :invoke_vserver_label => vserverlabel,
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['name']}/#{bind['policyname']}",
+                         priority: bind['priority'],
+                         goto_expression: bind['gotopriorityexpression'],
+                         invoke_policy_label: policylabel,
+                         invoke_vserver_label: vserverlabel)
       end
     end
 
@@ -37,7 +35,7 @@ Puppet::Type.type(:netscaler_csvserver_responderpolicy_binding).provide(:rest, {
 
   def property_to_rest_mapping
     {
-      :goto_expression => :gotopriorityexpression,
+      goto_expression: :gotopriorityexpression,
     }
   end
 

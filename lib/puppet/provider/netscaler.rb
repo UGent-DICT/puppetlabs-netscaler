@@ -3,13 +3,13 @@ require_relative '../../puppet/util/network_device/transport/netscaler'
 require 'json'
 
 class Puppet::Provider::Netscaler < Puppet::Provider
-  def initialize(value={})
+  def initialize(value = {})
     super(value)
-    if value.is_a? Hash
-      @original_values = value.clone
-    else
-      @original_values = Hash.new
-    end
+    @original_values = if value.is_a? Hash
+                         value.clone
+                       else
+                         {}
+                       end
     @create_elements = false
   end
 
@@ -31,7 +31,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     result = Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message(resource))
     @property_hash.clear
 
-    return result
+    result
   end
 
   def destroy
@@ -40,20 +40,20 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   end
 
   def flush
-    if @property_hash and ! @property_hash.empty?
-      #handle_unbinds('service', @original_values['binds'] - message['binds']) if ! @create_elements
+    if @property_hash && !@property_hash.empty?
+      # handle_unbinds('service', @original_values['binds'] - message['binds']) if ! @create_elements
 
       # We need to remove values from property hash that aren't specified in the Puppet resource
-      @property_hash = @property_hash.reject { |k, v| !(resource[k]) }
+      @property_hash = @property_hash.select { |k, _v| resource[k] }
 
       result = Puppet::Provider::Netscaler.put("/config/#{netscaler_api_type}/#{resource[:name]}", message(@property_hash))
-      #handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
+      # handle_binds('service', message['binds'] - @original_values['binds']) if ! @create_elements
       # We have to update the state in a separate call.
-      if @property_hash[:state] and ((@property_hash[:state] != @original_values[:state]) and (result.status == 200 or result.status == 201))
+      if @property_hash[:state] && ((@property_hash[:state] != @original_values[:state]) && (result.status == 200 || result.status == 201))
         set_state(@property_hash[:state], flush_state_args[:name_key], flush_state_args[:name_val])
       end
     end
-    return result
+    result
   end
 
   def self.device(url)
@@ -62,10 +62,10 @@ class Puppet::Provider::Netscaler < Puppet::Provider
 
   def self.transport
     if Puppet::Util::NetworkDevice.current
-      #we are in `puppet device`
+      # we are in `puppet device`
       Puppet::Util::NetworkDevice.current.transport
     else
-      #we are in `puppet resource`
+      # we are in `puppet resource`
       Puppet::Util::NetworkDevice::Transport::Netscaler.new(Facter.value(:url))
     end
   end
@@ -74,11 +74,11 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     transport.connection
   end
 
-  def self.call(url, args=nil)
+  def self.call(url, args = nil)
     transport.call(url, args)
   end
 
-  def self.post(url, message, args=nil)
+  def self.post(url, message, args = nil)
     transport.post(url, message, args)
   end
 
@@ -86,8 +86,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     transport.put(url, message)
   end
 
-  def self.delete(url,args=nil)
-    transport.delete(url,args)
+  def self.delete(url, args = nil)
+    transport.delete(url, args)
   end
 
   def basename
@@ -98,77 +98,77 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   # service, lbvserver, lbmonitor, etc.
   def netscaler_api_type
     # Each provider must implement this
-    raise RuntimeError, "Unimplemented method #netscaler_api_type"
+    raise 'Unimplemented method #netscaler_api_type'
   end
 
   # I don't want to use `def state=` because that will be called before flush
-  def set_state(value, name_key=nil, name_val=nil)
-    if name_key
-      message_hash = { name_key => name_val }
-    else
-      message_hash = {}
-    end
+  def set_state(value, name_key = nil, name_val = nil)
+    message_hash = if name_key
+                     { name_key => name_val }
+                   else
+                     {}
+                   end
     message_hash = { netscaler_api_type => message_hash }
     message_hash = message_hash.to_json
 
     action = nil
     value = value.upcase
     case value
-      when 'ENABLED'
-        action = "enable"
-      when 'DISABLED'
-        action = "disable"
-      when nil
-        # Do nothing
-      else
-        err "Incorrect state: #{value}"
+    when 'ENABLED'
+      action = 'enable'
+    when 'DISABLED'
+      action = 'disable'
+    when nil
+    # Do nothing
+    else
+      err "Incorrect state: #{value}"
     end
 
     if action
-      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message_hash, {"action" => action})
+      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message_hash, 'action' => action)
     end
   end
 
   def property_to_rest_mapping
     # Each provider must implement this
-    raise RuntimeError, "Unimplemented method #property_to_rest_mapping"
+    raise 'Unimplemented method #property_to_rest_mapping'
   end
 
   def immutable_properties
     # Each provider must implement this
-    raise RuntimeError, "Unimplemented method #immutable_properties"
+    raise 'Unimplemented method #immutable_properties'
   end
 
   def required_properties
     # Each provider must implement this
-    #raise RuntimeError, "Unimplemented method #requried_properties"
+    # raise RuntimeError, "Unimplemented method #requried_properties"
     # Actually, I'm just going to assume there are none
     []
   end
 
   def flush_state_args
     {
-      :name_key => 'name',
-      :name_val => resource[:name],
+      name_key: 'name',
+      name_val: resource[:name],
     }
   end
 
-  def per_provider_munge(message)
+  def per_provider_munge(_message)
     # Each provider must implement this
-    raise RuntimeError, "Unimplemented method #per_provider_munge"
+    raise 'Unimplemented method #per_provider_munge'
   end
 
   def global_provider_munge(message)
-    if ! @create_elements
+    unless @create_elements
       immutable_properties.each do |property|
-        if message[property] and message[property] != @original_values[property]
+        if message[property] && message[property] != (@original_values[property])
           err "Cannot update #{property} after creation"
         end
       end
       # Delete some properties if the resource already exists, since we can only
       # pass them on create. Otherwise we have to call #<property>=
-      message = message.reject do |key, value|
-        immutable_properties.include? key and ! required_properties.include? key
+      message = message.reject do |key, _value|
+        immutable_properties.include?(key) && !required_properties.include?(key)
       end
       # And also...
       message.delete(:state)
@@ -193,19 +193,19 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     message
   end
 
-  #def self.find_availability(string)
+  # def self.find_availability(string)
   #  transport.find_availability(string)
-  #end
+  # end
 
-  #def self.find_monitors(string)
+  # def self.find_monitors(string)
   #  transport.find_monitors(string)
-  #end
+  # end
 
-  #def self.integer?(str)
+  # def self.integer?(str)
   #  !!Integer(str)
-  #rescue ArgumentError, TypeError
+  # rescue ArgumentError, TypeError
   #  false
-  #end
+  # end
 
   # This allows us to simply rename keys from the puppet representation
   # to the Netscaler representation.
@@ -216,14 +216,14 @@ class Puppet::Provider::Netscaler < Puppet::Provider
       rename_hash.delete(k)
       rename_hash[v] = value
     end
-    return rename_hash
+    rename_hash
   end
 
   def create_message(hash)
     # Create the message by stripping :present.
-    new_hash            = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
+    new_hash = hash.reject { |k, _| [:ensure, :provider, Puppet::Type.metaparams].flatten.include?(k) }
 
-    return new_hash
+    new_hash
   end
 
   def string_to_integer(hash)
@@ -233,7 +233,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     end
   end
 
-  #def monitor_conversion(hash)
+  # def monitor_conversion(hash)
   #  message = hash
   #  # If monitor is an array then we need to rebuild the message.
   #  if hash[:availability]
@@ -247,9 +247,9 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   #    message[:monitor] = Array(hash[:monitor]).join(' and ')
   #  end
   #  message.merge(hash)
-  #end
+  # end
 
-  #def destination_conversion(message)
+  # def destination_conversion(message)
   #  if message[:'alias-address'] and message[:'alias-service-port']
   #    message[:destination] = "#{message[:'alias-address']}:#{message[:'alias-service-port']}"
   #  elsif message[:'alias-address']
@@ -259,19 +259,19 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   #  message.delete(:'alias-service-port')
 
   #  return message
-  #end
+  # end
 
   ## We need to convert our puppet array into a \n seperated string.
-  #def headers_conversion(message)
+  # def headers_conversion(message)
   #  if message[:headers]
   #    message[:headers] = message[:headers].join("\n")
   #  end
 
   #  return message
-  #end
+  # end
 
   ## We need to convert our puppet array into a space seperated string.
-  #def filters_conversion(message)
+  # def filters_conversion(message)
   #  if message[:filter]
   #    message[:filter] = message[:filter].join(' ')
   #  end
@@ -280,37 +280,36 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   #  end
 
   #  return message
-  #end
+  # end
 
   def remove_underscores(hash)
     # We want to remove all _'s in the key names of the hash we create
     # from the object we've passed into message.
-    hash.inject({}) do |memo, (k,v)|
-      key = k.to_s.gsub(/_/, '').to_sym
+    hash.each_with_object({}) do |(k, v), memo|
+      key = k.to_s.delete('_').to_sym
       memo[key] = v
-      memo
     end
   end
 
-  #def strip_elements(hash, elements_to_strip)
+  # def strip_elements(hash, elements_to_strip)
   #  message = hash.reject { |k, _| elements_to_strip.include?(k) }
 
   #  return message
-  #end
+  # end
 
   # For some reason the object we pass in has undefined parameters in the
   # object with nil values.  Not at all helpful for us.
   def strip_nil_values(hash)
-    hash.reject { |k, v| v.nil? }
+    hash.reject { |_k, v| v.nil? }
   end
 
   def self.is_ip_address(value)
-    !! (value and (value.match(Resolv::IPv6::Regex) or value.match(Resolv::IPv4::Regex)))
+    !!(value && (value.match(Resolv::IPv6::Regex) || value.match(Resolv::IPv4::Regex)))
   end
 
   ## Find the type of a given profile in the profile cache, or if it is not found
   ## try reloading the cache and looking again.
-  #def self.find_profile_type(profile)
+  # def self.find_profile_type(profile)
   #  profiles = @@profile_cache ||= sort_profiles
   #  if profiles[profile]
   #    profiles[profile]
@@ -318,12 +317,12 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   #    @@profile_cache = sort_profiles
   #    @@profile_cache[profile]
   #  end
-  #end
+  # end
 
   ## Find all profiles on the Netscaler and associate them as
   ## <profile name> => <profile type>
   ## (profile names are unique for all profile types)
-  #def self.sort_profiles
+  # def self.sort_profiles
   #  profile_types = Puppet::Provider::Netscaler.call("/mgmt/tm/ltm/profile").collect do |hash|
   #    hash["reference"]["link"].match(%r{([^/]+)\?})[1]
   #  end
@@ -334,5 +333,5 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   #    end
   #    memo.merge! profile_hash
   #  end
-  #end
+  # end
 end

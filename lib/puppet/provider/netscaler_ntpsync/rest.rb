@@ -1,19 +1,17 @@
 require_relative '../../../puppet/provider/netscaler'
 
-Puppet::Type.type(:netscaler_ntpsync).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_ntpsync).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "ntpsync"
+    'ntpsync'
   end
 
   def self.instances
     instances = []
     setting = Puppet::Provider::Netscaler.call('/config/ntpsync')
-    return [] if setting.nil? or setting.empty?
+    return [] if setting.nil? || setting.empty?
 
-    instances << new({
-      :ensure => :present,
-      :name   => setting['state'],
-    })
+    instances << new(ensure: :present,
+                     name: setting['state'])
 
     instances
   end
@@ -30,6 +28,7 @@ Puppet::Type.type(:netscaler_ntpsync).provide(:rest, {:parent => Puppet::Provide
     [
     ]
   end
+
   def per_provider_munge(message)
     message
   end

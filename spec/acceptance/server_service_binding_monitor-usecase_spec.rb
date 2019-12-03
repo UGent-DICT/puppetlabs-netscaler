@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'creates a typical netscaler deployment' do
   it 'makes a server / service / bindings / monitor' do
-    pp=<<-EOS
+    pp = <<-EOS
 node 'netscaler' {
 # Declare first server+service+monitor
   netscaler_server { 'server-1': # 5 clicks
@@ -52,7 +52,7 @@ netscaler_lbvserver_service_binding { 'vserver-lb-1/service-http-2': # 5 clicks
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

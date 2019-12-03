@@ -1,25 +1,25 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_service_lbmonitor_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
+Puppet::Type.type(:netscaler_service_lbmonitor_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
   def netscaler_api_type
-    "service_lbmonitor_binding"
+    'service_lbmonitor_binding'
   end
 
   def self.instances
     instances = []
-    services = Puppet::Provider::Netscaler.call("/config/service")
+    services = Puppet::Provider::Netscaler.call('/config/service')
     return [] if services.nil?
 
     services.each do |service|
       binds = Puppet::Provider::Netscaler.call("/config/service_lbmonitor_binding/#{service['name']}") || []
       binds.each do |bind|
-        instances << new({
-          :ensure => :present,
-          :name   => "#{bind['name']}/#{bind['monitor_name']}",
-          :weight => bind['weight'],
-          :state  => bind['monitor_state'] == 'DISABLED' ? 'DISABLED' : 'ENABLED',
+        instances << new(
+          ensure: :present,
+          name: "#{bind['name']}/#{bind['monitor_name']}",
+          weight: bind['weight'],
+          state: (bind['monitor_state'] == 'DISABLED') ? 'DISABLED' : 'ENABLED',
           #:passive => bind['passive'],
-        })
+        )
       end
     end
 
@@ -30,7 +30,7 @@ Puppet::Type.type(:netscaler_service_lbmonitor_binding).provide(:rest, {:parent 
 
   def property_to_rest_mapping
     {
-      :state          => :monstate,
+      state: :monstate,
     }
   end
 
@@ -42,10 +42,9 @@ Puppet::Type.type(:netscaler_service_lbmonitor_binding).provide(:rest, {:parent 
 
   def destroy
     toname, fromname = resource.name.split('/').map { |n| URI.escape(n) }
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}",{'args'=>"monitor_name:#{fromname}"})
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}", 'args' => "monitor_name:#{fromname}")
     @property_hash.clear
 
-    return result
+    result
   end
 end
-

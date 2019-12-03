@@ -2,9 +2,9 @@ require_relative '../../../puppet/provider/netscaler'
 
 require 'json'
 
-Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_sslvserver).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "sslvserver_sslcertkey_binding"
+    'sslvserver_sslcertkey_binding'
   end
 
   def self.instances
@@ -16,15 +16,13 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
       binds = Puppet::Provider::Netscaler.call("/config/sslvserver_sslcertkey_binding/#{sslvserver['vservername']}") || []
 
       binds.each do |bind|
-        instances << new({
-          :ensure     => :present,
-          :name       => "#{bind['vservername']}/#{bind['certkeyname']}",
-          :crlcheck   => bind['crlcheck'],
-          :ca         => bind['ca'],
-          :snicert    => bind['snicert'],
-          :skipcaname => bind['skipcaname'],
-          :ocspcheck  => bind['ocspcheck'],
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['vservername']}/#{bind['certkeyname']}",
+                         crlcheck: bind['crlcheck'],
+                         ca: bind['ca'],
+                         snicert: bind['snicert'],
+                         skipcaname: bind['skipcaname'],
+                         ocspcheck: bind['ocspcheck'])
       end
     end
 
@@ -36,7 +34,7 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
   # Map for conversion in the message.
   def property_to_rest_mapping
     {
-    :name          => :vservername,
+      name: :vservername,
     }
   end
 
@@ -52,9 +50,9 @@ Puppet::Type.type(:netscaler_sslvserver).provide(:rest, {:parent => Puppet::Prov
 
   def destroy
     vservername, certkeyname = resource.name.split('/')
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{vservername}", {'args'=>"certkeyname:#{certkeyname}"})
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{vservername}", 'args' => "certkeyname:#{certkeyname}")
     @property_hash.clear
-    return result
+    result
   end
 
   def per_provider_munge(message)

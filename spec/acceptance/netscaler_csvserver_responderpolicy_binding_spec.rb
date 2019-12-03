@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'responderpolicy' do
   it 'makes a csvserver-responderpolicy-binding (no invoke)' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_responderpolicy { '2_3_responderpolicy_test1':
   ensure                  => 'present',
   action                  => 'NOOP',
@@ -25,12 +25,12 @@ netscaler_csvserver_responderpolicy_binding { '2_3_csvserver_test1/2_3_responder
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes and deletes a csvserver-responderpolicy-binding (no invoke)' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_responderpolicy { '2_3_responderpolicy_test2':
   ensure                  => 'present',
   action                  => 'NOOP',
@@ -53,21 +53,21 @@ netscaler_csvserver_responderpolicy_binding { '2_3_csvserver_test2/2_3_responder
 }
 EOS
 
-    pp2=<<-EOS
+    pp2 = <<-EOS
 netscaler_csvserver_responderpolicy_binding { '2_3_csvserver_test2/2_3_responderpolicy_test2':
   ensure    => absent,
 }
 EOS
 
     make_site_pp(pp)
-    run_device(:allow_changes => true)
+    run_device(allow_changes: true)
     make_site_pp(pp2)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a csvserver-responderpolicy-binding (resvserver)' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_responderpolicy { '2_3_responderpolicy_test3':
   ensure                  => 'present',
   action                  => 'NOOP',
@@ -99,7 +99,7 @@ netscaler_csvserver_responderpolicy_binding { '2_3_csvserver_test3/2_3_responder
 }
 EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

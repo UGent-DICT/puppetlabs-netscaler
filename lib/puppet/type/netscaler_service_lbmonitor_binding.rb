@@ -6,8 +6,8 @@ Puppet::Type.newtype(:netscaler_service_lbmonitor_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "service_name/lbmonitor_name"
+  newparam(:name, namevar: true) do
+    desc 'service_name/lbmonitor_name'
   end
 
   newproperty(:weight) do
@@ -15,14 +15,14 @@ Puppet::Type.newtype(:netscaler_service_lbmonitor_binding) do
 
     Min = 1
     Max = 100"
-    newvalues(/^\d+$/)
+    newvalues(%r{^\d+$})
     munge do |value|
       Integer(value)
     end
   end
 
-  newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property('The configured state (enable/disable) of the bound monitor.','ENABLED','DISABLED')
+  newproperty(:state, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The configured state (enable/disable) of the bound monitor.', 'ENABLED', 'DISABLED')
   end
 
   # Always appears as false in the get REST API response. May go back in

@@ -8,22 +8,22 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
 
   newproperty(:expression) do
-    desc "Expression to be used by rewrite policy. It has to be a boolean PI rule expression."
+    desc 'Expression to be used by rewrite policy. It has to be a boolean PI rule expression.'
   end
 
   newproperty(:action) do
-    desc "Rewrite action to be used by the policy."
+    desc 'Rewrite action to be used by the policy.'
   end
 
   newproperty(:undefined_result_action) do
-    desc "A rewrite action, to be used by the policy when the rule evaluation turns out to be undefined. The undef action can be NOREWRITE, RESET or DROP"
+    desc 'A rewrite action, to be used by the policy when the rule evaluation turns out to be undefined. The undef action can be NOREWRITE, RESET or DROP'
 
     validate do |value|
-      if ! [:NOREWRITE,:RESET,:DROP].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: NOREWRITE, RESET, DROP"
+      if [:NOREWRITE, :RESET, :DROP].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: NOREWRITE, RESET, DROP'
       end
     end
 
@@ -31,11 +31,10 @@ Puppet::Type.newtype(:netscaler_rewritepolicy) do
   end
 
   newproperty(:comments) do
-    desc "Comments associated with this rewrite policy."
+    desc 'Comments associated with this rewrite policy.'
   end
 
   newproperty(:log_action) do
-    desc "The log action associated with the rewrite policy"
+    desc 'The log action associated with the rewrite policy'
   end
-  
 end

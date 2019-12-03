@@ -17,12 +17,12 @@ netscaler_lbvserver { 'csaction_lbvs2':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'makes a csaction' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_csaction { 'testexpr':
   ensure               => present,
   target_lb_expression => 'http.REQ.HOSTNAME',
@@ -33,12 +33,12 @@ netscaler_csaction { 'tolbvs':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
   it 'edit a csaction' do
-    pp=<<-EOS
+    pp = <<-EOS
 netscaler_csaction { 'testexpr':
   ensure               => present,
   target_lb_expression => '"mylb_" + HTTP.REQ.URL.SUFFIX',
@@ -49,12 +49,12 @@ netscaler_csaction { 'tolbvs':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 
- it 'delete a csaction' do
-    pp=<<-EOS
+  it 'delete a csaction' do
+    pp = <<-EOS
 netscaler_csaction { 'testexpr':
   ensure => absent,
 }
@@ -63,7 +63,7 @@ netscaler_csaction { 'tolbvs':
 }
     EOS
     make_site_pp(pp)
-    run_device(:allow_changes => true)
-    run_device(:allow_changes => false)
+    run_device(allow_changes: true)
+    run_device(allow_changes: false)
   end
 end

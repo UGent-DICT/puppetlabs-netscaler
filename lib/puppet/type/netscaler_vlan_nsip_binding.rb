@@ -6,12 +6,12 @@ Puppet::Type.newtype(:netscaler_vlan_nsip_binding) do
   apply_to_device
   ensurable
 
-  newparam(:name, :namevar => true) do
-    desc "vlan_id/ip_address"
+  newparam(:name, namevar: true) do
+    desc 'vlan_id/ip_address'
   end
 
   newproperty(:netmask) do
-    desc "Subnet mask for the network address defined for this VLAN."
+    desc 'Subnet mask for the network address defined for this VLAN.'
   end
 
   newproperty(:td) do

@@ -1,25 +1,23 @@
 require_relative '../../../puppet/provider/netscaler_binding'
 
-Puppet::Type.type(:netscaler_servicegroup_lbmonitor_binding).provide(:rest, {:parent => Puppet::Provider::NetscalerBinding}) do
+Puppet::Type.type(:netscaler_servicegroup_lbmonitor_binding).provide(:rest, parent: Puppet::Provider::NetscalerBinding) do
   def netscaler_api_type
-    "servicegroup_lbmonitor_binding"
+    'servicegroup_lbmonitor_binding'
   end
 
   def self.instances
     instances = []
-    servicegroups = Puppet::Provider::Netscaler.call("/config/servicegroup")
+    servicegroups = Puppet::Provider::Netscaler.call('/config/servicegroup')
     return [] if servicegroups.nil?
 
     servicegroups.each do |servicegroup|
       binds = Puppet::Provider::Netscaler.call("/config/servicegroup_lbmonitor_binding/#{servicegroup['servicegroupname']}") || []
       binds.each do |bind|
-        instances << new({
-          :ensure  => :present,
-          :name    => "#{bind['servicegroupname']}/#{bind['monitor_name']}",
-          :weight  => bind['weight'],
-          :state   => bind['monstate'],
-          :passive => bind['passive'],
-        })
+        instances << new(ensure: :present,
+                         name: "#{bind['servicegroupname']}/#{bind['monitor_name']}",
+                         weight: bind['weight'],
+                         state: bind['monstate'],
+                         passive: bind['passive'])
       end
     end
 
@@ -30,7 +28,7 @@ Puppet::Type.type(:netscaler_servicegroup_lbmonitor_binding).provide(:rest, {:pa
 
   def property_to_rest_mapping
     {
-      :state          => :monstate,
+      state: :monstate,
     }
   end
 
@@ -43,9 +41,9 @@ Puppet::Type.type(:netscaler_servicegroup_lbmonitor_binding).provide(:rest, {:pa
 
   def destroy
     toname, fromname = resource.name.split('/').map { |n| URI.escape(n) }
-    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}",{'args'=>"monitor_name:#{fromname}"})
+    result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{toname}", 'args' => "monitor_name:#{fromname}")
     @property_hash.clear
 
-    return result
+    result
   end
 end

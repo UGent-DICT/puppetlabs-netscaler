@@ -8,37 +8,33 @@ Puppet::Type.newtype(:netscaler_policyexpression) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
 
   newproperty(:value) do
-    desc "Expression string. For example: http.req.body(100).contains(\"this\")."
+    desc 'Expression string. For example: http.req.body(100).contains("this").'
   end
 
   newproperty(:description) do
-    desc "Description for the expression."
+    desc 'Description for the expression.'
   end
 
   newproperty(:comment) do
-    desc "Any comments associated with the expression. Displayed upon viewing the policy expression."
+    desc 'Any comments associated with the expression. Displayed upon viewing the policy expression.'
   end
 
-
   newproperty(:client_security_message) do
-    desc "Message to display if the expression fails. Allowed for classic end-point check expressions only. Minimum length = 1"
+    desc 'Message to display if the expression fails. Allowed for classic end-point check expressions only. Minimum length = 1'
   end
 
   newproperty(:type) do
-    desc "Type of expression. Can be a classic or default syntax (advanced) expression. Possible values = CLASSIC, ADVANCED"
+    desc 'Type of expression. Can be a classic or default syntax (advanced) expression. Possible values = CLASSIC, ADVANCED'
 
     validate do |value|
-      if ! [:CLASSIC,:ADVANCED].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: CLASSIC, ADVANCED"
+      if [:CLASSIC, :ADVANCED].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: CLASSIC, ADVANCED'
       end
     end
 
     munge(&:upcase)
   end
-
-
-
 end

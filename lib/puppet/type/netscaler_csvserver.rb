@@ -8,7 +8,7 @@ Puppet::Type.newtype(:netscaler_csvserver) do
   apply_to_device
   ensurable
 
-  newparam(:name, :parent => Puppet::Parameter::NetscalerName, :namevar => true)
+  newparam(:name, parent: Puppet::Parameter::NetscalerName, namevar: true)
 
   newparam(:purge_bindings)
 
@@ -23,11 +23,11 @@ Maximum value = 4094"
   end
 
   newproperty(:service_type) do
-    desc "The service type of the virtual server. Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER."
+    desc 'The service type of the virtual server. Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER.'
 
     validate do |value|
-      if ! [:HTTP,:SSL,:TCP,:FTP,:RTSP,:SSL_TCP,:UDP,:DNS,:SIP_UDP,:ANY,:RADIUS,:RDP,:MYSQL,:MSSQL,:DIAMETER,:SSL_DIAMETER,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER"
+      if [:HTTP, :SSL, :TCP, :FTP, :RTSP, :SSL_TCP, :UDP, :DNS, :SIP_UDP, :ANY, :RADIUS, :RDP, :MYSQL, :MSSQL, :DIAMETER, :SSL_DIAMETER].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: HTTP, SSL, TCP, FTP, RTSP, SSL_TCP, UDP, DNS, SIP_UDP, ANY, RADIUS, RDP, MYSQL, MSSQL, DIAMETER, SSL_DIAMETER'
       end
     end
 
@@ -35,11 +35,11 @@ Maximum value = 4094"
   end
 
   newproperty(:ip_address) do
-    desc "The new IP address of the virtual server."
+    desc 'The new IP address of the virtual server.'
   end
 
   newproperty(:ip_pattern) do
-    desc "The IP Pattern of the virtual server."
+    desc 'The IP Pattern of the virtual server.'
   end
 
   newproperty(:range) do
@@ -62,20 +62,20 @@ Maximum value = 4094"
     end
   end
 
-  newproperty(:state, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("The initial state, enabled or disabled, of the virtual server.", 'ENABLED', 'DISABLED')
+  newproperty(:state, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The initial state, enabled or disabled, of the virtual server.', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:state_update, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("To enable the state update for a CSW vserver", 'ENABLED', 'DISABLED')
+  newproperty(:state_update, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('To enable the state update for a CSW vserver', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:cacheable, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("The option to specify whether a virtual server used for content switching will route requests to the cache redirection virtual server before sending it to the configured servers.", 'YES', 'NO')
+  newproperty(:cacheable, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The option to specify whether a virtual server used for content switching will route requests to the cache redirection virtual server before sending it to the configured servers.', 'YES', 'NO')
   end
 
   newproperty(:redirect_url) do
-    desc "The redirect URL for content switching."
+    desc 'The redirect URL for content switching.'
   end
 
   newproperty(:client_timeout) do
@@ -96,34 +96,34 @@ Maximum value = 4094"
   Also, this precedence can be used if some content (such as images) is the same for all clients, but other content (such as text) is different for different clients. In this case, the images will be served to all clients, but the text will be served to specific clients based on specific attributes, such as Accept-Language. Valid options: RULE, URL."
 
     validate do |value|
-      if ! [:RULE,:URL,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: RULE, URL"
+      if [:RULE, :URL].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: RULE, URL'
       end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:case_sensitive, :parent => Puppet::Property::NetscalerTruthy) do
+  newproperty(:case_sensitive, parent: Puppet::Property::NetscalerTruthy) do
     truthy_property("The URL lookup case option on the content switching vserver.
   If case sensitivity of a content switching virtual server is set to 'ON', the URLs /a/1.html and /A/1.HTML are treated differently and may have different targets (set by content switching policies).
   If case sensitivity is set to 'OFF', the URLs /a/1.html and /A/1.HTML are treated the same, and will be switched to the same target.", 'ON', 'OFF')
   end
 
   newproperty(:spillover_method) do
-    desc "The spillover factor. When traffic on the main virtual server reaches this threshold, additional traffic is sent to the backupvserver. Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE."
+    desc 'The spillover factor. When traffic on the main virtual server reaches this threshold, additional traffic is sent to the backupvserver. Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE.'
 
     validate do |value|
-      if ! [:CONNECTION,:DYNAMICCONNECTION,:BANDWIDTH,:HEALTH,:NONE,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE"
+      if [:CONNECTION, :DYNAMICCONNECTION, :BANDWIDTH, :HEALTH, :NONE].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: CONNECTION, DYNAMICCONNECTION, BANDWIDTH, HEALTH, NONE'
       end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:spillover_persistence, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("The state of the spillover persistence.", 'ENABLED', 'DISABLED')
+  newproperty(:spillover_persistence, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('The state of the spillover persistence.', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:spillover_threshold) do
@@ -141,28 +141,28 @@ Maximum value = 4094"
 Valid options: DROP, ACCEPT, REDIRECT"
 
     validate do |value|
-      if ! [:DROP,:ACCEPT,:REDIRECT,].any?{ |s| s.to_s.eql? value }
-          fail ArgumentError, "Valid options: DROP, ACCEPT, REDIRECT"
+      if [:DROP, :ACCEPT, :REDIRECT].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: DROP, ACCEPT, REDIRECT'
       end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:redirect_port_rewrite, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("SSL redirect port rewrite.", 'ENABLED', 'DISABLED')
+  newproperty(:redirect_port_rewrite, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('SSL redirect port rewrite.', 'ENABLED', 'DISABLED')
   end
 
-  newproperty(:down_state_flush, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Perform delayed clean up of connections on this vserver.", 'ENABLED', 'DISABLED')
+  newproperty(:down_state_flush, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Perform delayed clean up of connections on this vserver.', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:backup_virtual_server) do
-    desc "The backup virtual server for content switching."
+    desc 'The backup virtual server for content switching.'
   end
 
-  newproperty(:disable_primary_on_down, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("When this argument is enabled, traffic will continue reaching backup vservers even after primary comes UP from DOWN state.", 'ENABLED', 'DISABLED')
+  newproperty(:disable_primary_on_down, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('When this argument is enabled, traffic will continue reaching backup vservers even after primary comes UP from DOWN state.', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:virtual_server_ip_port_insertion) do
@@ -172,8 +172,8 @@ Valid options: DROP, ACCEPT, REDIRECT"
     V6TOV4MAPPING - Header contains the mapped IPv4 address that corresponds to the IPv6 address of the vserver and the port number. An IPv6 address can be mapped to a user-specified IPv4 address using the set ns ip6 command."
 
     validate do |value|
-      if ! [:OFF,:VIPADDR,:V6TOV4MAPPING,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: OFF, VIPADDR, V6TOV4MAPPING"
+      if [:OFF, :VIPADDR, :V6TOV4MAPPING].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: OFF, VIPADDR, V6TOV4MAPPING'
       end
     end
 
@@ -185,16 +185,16 @@ Valid options: DROP, ACCEPT, REDIRECT"
 Minimum length = 1"
   end
 
-  newproperty(:rtsp_natting, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Use this parameter to enable natting for RTSP data connection.", 'ON', 'OFF')
+  newproperty(:rtsp_natting, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Use this parameter to enable natting for RTSP data connection.', 'ON', 'OFF')
   end
 
   newproperty(:authentication_fqdn) do
-    desc "FQDN of authentication vserver"
+    desc 'FQDN of authentication vserver'
   end
 
-  newproperty(:authentication, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("This option toggles on or off the application of authentication of incoming users to the vserver.", 'ON', 'OFF')
+  newproperty(:authentication, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('This option toggles on or off the application of authentication of incoming users to the vserver.', 'ON', 'OFF')
   end
 
   newproperty(:listen_policy) do
@@ -212,20 +212,20 @@ Minimum length = 1"
     end
   end
 
-  newproperty(:authentication_401, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("This option toggles on or off the HTTP 401 response based authentication.", 'ON', 'OFF')
+  newproperty(:authentication_401, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('This option toggles on or off the HTTP 401 response based authentication.', 'ON', 'OFF')
   end
 
   newproperty(:authentication_virtual_server_name) do
-    desc "Name of authentication vserver"
+    desc 'Name of authentication vserver'
   end
 
-  newproperty(:push, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Process traffic on bound Push vserver.", 'ENABLED', 'DISABLED')
+  newproperty(:push, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Process traffic on bound Push vserver.', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:push_virtual_server_name) do
-    desc "The lb vserver of type PUSH/SSL_PUSH to which server pushes the updates received on the client facing non-push lb vserver."
+    desc 'The lb vserver of type PUSH/SSL_PUSH to which server pushes the updates received on the client facing non-push lb vserver.'
   end
 
   newproperty(:push_label_expression) do
@@ -233,28 +233,28 @@ Minimum length = 1"
   The string can be either a named expression (configured using add policy expression command) or else it can be an in-line expression with a maximum of 63 characters."
   end
 
-  newproperty(:push_multiple_clients, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Specify if multiple web 2.0 connections from the same client can connect to this vserver and expect updates.", 'YES', 'NO')
+  newproperty(:push_multiple_clients, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Specify if multiple web 2.0 connections from the same client can connect to this vserver and expect updates.', 'YES', 'NO')
   end
 
   newproperty(:tcp_profile_name) do
-    desc "The name of the TCP profile."
+    desc 'The name of the TCP profile.'
   end
 
   newproperty(:http_profile_name) do
-    desc "Name of the HTTP profile."
+    desc 'Name of the HTTP profile.'
   end
 
   newproperty(:db_profile_name) do
-    desc "Name of the DB profile."
+    desc 'Name of the DB profile.'
   end
 
   newproperty(:oracle_server_version) do
-    desc "Oracle server version. Valid options: 10G, 11G."
+    desc 'Oracle server version. Valid options: 10G, 11G.'
 
     validate do |value|
-      if ! [:'10G',:'11G',].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: 10G, 11G"
+      if [:'10G', :'11G'].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: 10G, 11G'
       end
     end
 
@@ -262,27 +262,27 @@ Minimum length = 1"
   end
 
   newproperty(:comment) do
-    desc "Comments associated with this virtual server."
+    desc 'Comments associated with this virtual server.'
   end
 
   newproperty(:mssql_server_version) do
-    desc "The version of the MSSQL server. Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2."
+    desc 'The version of the MSSQL server. Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2.'
 
     validate do |value|
-      if ! [:'70',:'2000',:'2000SP1',:'2005',:'2008',:'2008R2',].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2"
+      if [:'70', :'2000', :'2000SP1', :'2005', :'2008', :'2008R2'].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: 70, 2000, 2000SP1, 2005, 2008, 2008R2'
       end
     end
 
     munge(&:upcase)
   end
 
-  newproperty(:layer2_parameters, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Use L2 Parameters to identify a connection", 'ON', 'OFF')
+  newproperty(:layer2_parameters, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Use L2 Parameters to identify a connection', 'ON', 'OFF')
   end
 
   newproperty(:mysql_protocol_version) do
-    desc "The protocol version returned by the mysql vserver."
+    desc 'The protocol version returned by the mysql vserver.'
 
     munge do |value|
       Integer(value)
@@ -290,11 +290,11 @@ Minimum length = 1"
   end
 
   newproperty(:mysql_server_version) do
-    desc "The server version string returned by the mysql vserver."
+    desc 'The server version string returned by the mysql vserver.'
   end
 
   newproperty(:mysql_character_set) do
-    desc "The character set returned by the mysql vserver."
+    desc 'The character set returned by the mysql vserver.'
 
     munge do |value|
       Integer(value)
@@ -302,27 +302,27 @@ Minimum length = 1"
   end
 
   newproperty(:mysql_server_capabilities) do
-    desc "The server capabilities returned by the mysql vserver."
+    desc 'The server capabilities returned by the mysql vserver.'
 
     munge do |value|
       Integer(value)
     end
   end
 
-  newproperty(:appflow_logging, :parent => Puppet::Property::NetscalerTruthy) do
-    truthy_property("Enable logging appflow flow information", 'ENABLED', 'DISABLED')
+  newproperty(:appflow_logging, parent: Puppet::Property::NetscalerTruthy) do
+    truthy_property('Enable logging appflow flow information', 'ENABLED', 'DISABLED')
   end
 
   newproperty(:net_profile_name) do
-    desc "The name of the network profile."
+    desc 'The name of the network profile.'
   end
 
   newproperty(:icmp_virtual_server_response) do
-    desc "Can be active or passive. Valid options: PASSIVE, ACTIVE."
+    desc 'Can be active or passive. Valid options: PASSIVE, ACTIVE.'
 
     validate do |value|
-      if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
+      if [:PASSIVE, :ACTIVE].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: PASSIVE, ACTIVE'
       end
     end
 
@@ -330,7 +330,7 @@ Minimum length = 1"
   end
 
   newproperty(:ip_mask) do
-    desc "The IP Mask of the virtual server IP Pattern"
+    desc 'The IP Mask of the virtual server IP Pattern'
   end
 
   newproperty(:spillover_persistence_timeout) do
@@ -345,11 +345,11 @@ Minimum length = 1"
   end
 
   newproperty(:rhi_state) do
-    desc "A host route is injected according to the setting on the virtual servers * If set to PASSIVE on all the virtual servers that share the IP address, the appliance always injects the hostroute. * If set to ACTIVE on all the virtual servers that share the IP address, the appliance injects even if one virtual server is UP. * If set to ACTIVE on some virtual servers and PASSIVE on the others, the appliance, injects even if one virtual server set to ACTIVE is UP. Valid options: PASSIVE, ACTIVE"
+    desc 'A host route is injected according to the setting on the virtual servers * If set to PASSIVE on all the virtual servers that share the IP address, the appliance always injects the hostroute. * If set to ACTIVE on all the virtual servers that share the IP address, the appliance injects even if one virtual server is UP. * If set to ACTIVE on some virtual servers and PASSIVE on the others, the appliance, injects even if one virtual server set to ACTIVE is UP. Valid options: PASSIVE, ACTIVE'
 
     validate do |value|
-      if ! [:PASSIVE,:ACTIVE,].any?{ |s| s.to_s.eql? value }
-        fail ArgumentError, "Valid options: PASSIVE, ACTIVE"
+      if [:PASSIVE, :ACTIVE].none? { |s| s.to_s.eql? value }
+        raise ArgumentError, 'Valid options: PASSIVE, ACTIVE'
       end
     end
 
@@ -357,11 +357,11 @@ Minimum length = 1"
   end
 
   newproperty(:authentication_profile_name) do
-    desc "Name of the authentication profile to be used when authentication is turned on."
+    desc 'Name of the authentication profile to be used when authentication is turned on.'
   end
 
   newproperty(:default_lbvserver) do
-    desc "The virtual server name to which content will be switched. This is a special case, where the binding to the lbvserver is created when the csvserver is created"
+    desc 'The virtual server name to which content will be switched. This is a special case, where the binding to the lbvserver is created when the csvserver is created'
   end
 
   def generate
@@ -371,11 +371,11 @@ Minimum length = 1"
 
     # gather a list of all relevant bindings present on the system
     rewrite_policies = Puppet::Type.type(:netscaler_csvserver_rewritepolicy_bind)
-    if rewrite_policies != nil
+    unless rewrite_policies.nil?
       system_resources += rewrite_policies.instances
     end
     responder_policies = Puppet::Type.type(:netscaler_csvserver_responderpolicy_bind)
-    if responder_policies != nil
+    unless responder_policies.nil?
       system_resources += responder_policies.instances
     end
 
@@ -386,7 +386,7 @@ Minimum length = 1"
     system_resources.delete_if { |res| (res[:name].split('/')[0] != value(:name)) }
 
     # We mark all remaining resources for deletion
-    system_resources.each {|res| res[:ensure] = :absent}
+    system_resources.each { |res| res[:ensure] = :absent }
 
     system_resources
   end

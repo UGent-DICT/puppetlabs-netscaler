@@ -1,8 +1,8 @@
 require_relative '../../../puppet/provider/netscaler'
 
-Puppet::Type.type(:netscaler_nshostname).provide(:rest, {:parent => Puppet::Provider::Netscaler}) do
+Puppet::Type.type(:netscaler_nshostname).provide(:rest, parent: Puppet::Provider::Netscaler) do
   def netscaler_api_type
-    "nshostname"
+    'nshostname'
   end
 
   def self.instances
@@ -11,13 +11,10 @@ Puppet::Type.type(:netscaler_nshostname).provide(:rest, {:parent => Puppet::Prov
     return [] if hostnames.nil?
 
     hostnames.each do |hostname|
-      if ! hostname.empty?
-        instances << new({
-          :ensure     => :present,
-          :name       => hostname['hostname'],
-          :owner_node => hostname['ownernode'],
-        })
-      end
+      next if hostname.empty?
+      instances << new(ensure: :present,
+                       name: hostname['hostname'],
+                       owner_node: hostname['ownernode'])
     end
 
     instances
@@ -35,6 +32,7 @@ Puppet::Type.type(:netscaler_nshostname).provide(:rest, {:parent => Puppet::Prov
     [
     ]
   end
+
   def per_provider_munge(message)
     message[:hostname] = resource.name
     message
