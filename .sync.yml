@@ -1,14 +1,50 @@
 ---
+Gemfile:
+  optional:
+    ':development':
+      - gem: awesome_print
+      - gem: puppet-lint-absolute_classname-check
+      - gem: puppet-lint-leading_zero-check
+      - gem: puppet-lint-trailing_comma-check
+      - gem: puppet-lint-version_comparison-check
+      - gem: puppet-lint-unquoted_string-check
+      - gem: puppet-lint-param-docs
+
+#spec/default_facts.yml:
+#  extra_facts:
+
+spec/spec_helper.rb:
+  mock_with: ':rspec'
+  hiera_config: 'spec/fixtures/hiera/hiera.yaml'
+  spec_overrides: |
+    RSpec.configuration.trusted_server_facts = true
+  
+    # make sure on_supported_os uses the default facts too.
+    default_facts.each do |fact, value|
+      add_custom_fact(fact, value)
+    end
+    # rubocop:disable Layout/TrailingBlankLines
+
+    if ENV['PUPPET_DEBUG']
+      RSpec.configure do |conf|
+        conf.before(:each) do
+          Puppet::Util::Log.level = :debug
+          Puppet::Util::Log.newdestination(:console)
+        end
+      end
+    end
+  
+#end spec_overrides
+
+Rakefile:
+  extras: |
+    # The CI scripts use the ispec task. Alias it
+    task ispec: :spec
+  
+#end Rakefile>extras
+
+# Unused files.
 appveyor.yml:
-  unmanaged: true
-spec/acceptance/nodesets/default.yml:
-  unmanaged: true
-
-# The module isn't setup for travis based docker CI
-.travis.yml:
-  docker_sets:
-
-NOTICE:
-  copyright_holders:
-    - name: 'Puppet, Inc.'
-      begin: 2014
+  delete: true
+.gitlab-ci.yml:
+  delete: true
