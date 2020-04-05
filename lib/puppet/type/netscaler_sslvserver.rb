@@ -34,4 +34,28 @@ Possible values = Mandatory, Optional"
     desc "The state of the OCSP check parameter. (Mandatory/Optional).
 Possible values = Mandatory, Optional"
   end
+
+  autorequire(:netscaler_lbvserver) do
+    if !self.deleting?
+      self[:name].split('/')[0]
+    end
+  end
+
+  autobefore(:netscaler_lbvserver) do
+    if self.deleting?
+      self[:name].split('/')[0]
+    end
+  end
+
+  autorequire(:netscaler_sslcertkey) do
+    if !self.deleting?
+      self[:name].split('/')[1]
+    end
+  end
+
+  autobefore(:netscaler_sslcertkey) do
+    if self.deleting?
+      self[:name].split('/')[1]
+    end
+  end
 end
