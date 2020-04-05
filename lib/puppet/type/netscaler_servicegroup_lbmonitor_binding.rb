@@ -34,9 +34,26 @@ Puppet::Type.newtype(:netscaler_servicegroup_lbmonitor_binding) do
   end
 
   autorequire(:netscaler_servicegroup) do
-    self[:name].split('/')[0]
+    if !self.deleting?
+      self[:name].split('/')[0]
+    end
   end
+
+  autobefore(:netscaler_servicegroup) do
+    if self.deleting?
+      self[:name].split('/')[0]
+    end
+  end
+
   autorequire(:netscaler_lbmonitor) do
-    self[:name].split('/')[1]
+    if !self.deleting?
+      self[:name].split('/')[1]
+    end
+  end
+
+  autobefore(:netscaler_lbmonitor) do
+    if self.deleting?
+      self[:name].split('/')[1]
+    end
   end
 end

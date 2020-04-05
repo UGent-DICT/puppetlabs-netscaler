@@ -34,11 +34,27 @@ Max = 2147483647"
   end
 
   autorequire(:netscaler_lbvserver) do
-    [self[:name].split('/')[0], self[:invoke_vserver_label]]
+    if !self.deleting?
+      [self[:name].split('/')[0], self[:invoke_vserver_label]]
+    end
+  end
+
+  autobefore(:netscaler_lbvserver) do
+    if self.deleting?
+      [self[:name].split('/')[0], self[:invoke_vserver_label]]
+    end
   end
 
   autorequire(:netscaler_responderpolicy) do
-    self[:name].split('/')[1]
+    if !self.deleting?
+      self[:name].split('/')[1]
+    end
+  end
+
+  autobefore(:netscaler_responderpolicy) do
+    if self.deleting?
+      self[:name].split('/')[1]
+    end
   end
 
   autorequire(:netscaler_csvserver) do

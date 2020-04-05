@@ -11,9 +11,26 @@ Puppet::Type.newtype(:netscaler_lbvserver_servicegroup_binding) do
   end
 
   autorequire(:netscaler_lbvserver) do
-    self[:name].split('/')[0]
+    if !self.deleting?
+      self[:name].split('/')[0]
+    end
   end
+
+  autobefore(:netscaler_lbvserver) do
+    if self.deleting?
+      self[:name].split('/')[0]
+    end
+  end
+
   autorequire(:netscaler_servicegroup) do
-    self[:name].split('/')[1]
+    if !self.deleting?
+      self[:name].split('/')[1]
+    end
+  end
+
+  autobefore(:netscaler_servicegroup) do
+    if self.deleting?
+      self[:name].split('/')[1]
+    end
   end
 end
