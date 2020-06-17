@@ -309,6 +309,6 @@ Note: This parameter is available only when the Use Source IP (USIP) parameter i
     end
   end
   autorequire(:netscaler_server) do
-    self[:server_name] if server = self[:server_name]
+    self[:server_name]
   end
 end
