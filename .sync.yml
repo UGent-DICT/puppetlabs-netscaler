@@ -10,15 +10,12 @@ Gemfile:
       - gem: puppet-lint-unquoted_string-check
       - gem: puppet-lint-param-docs
 
-#spec/default_facts.yml:
-#  extra_facts:
-
 spec/spec_helper.rb:
   mock_with: ':rspec'
   hiera_config: 'spec/fixtures/hiera/hiera.yaml'
   spec_overrides: |
     RSpec.configuration.trusted_server_facts = true
-  
+
     # make sure on_supported_os uses the default facts too.
     default_facts.each do |fact, value|
       add_custom_fact(fact, value)
@@ -33,18 +30,14 @@ spec/spec_helper.rb:
         end
       end
     end
-  
-#end spec_overrides
 
-Rakefile:
-  extras: |
-    # The CI scripts use the ispec task. Alias it
-    task ispec: :spec
-  
-#end Rakefile>extras
+#end spec_overrides
 
 .travis.yml:
   branches: [ 'develop' ]
+
+.rubocop.yml:
+  include_todos: true
 
 # Unused files.
 appveyor.yml:
