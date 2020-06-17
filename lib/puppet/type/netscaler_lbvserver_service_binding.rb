@@ -22,25 +22,25 @@ Max = 100"
   end
 
   autorequire(:netscaler_lbvserver) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[0]
     end
   end
 
   autobefore(:netscaler_lbvserver) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[0]
     end
   end
 
   autorequire(:netscaler_service) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[1]
     end
   end
 
   autobefore(:netscaler_service) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[1]
     end
   end

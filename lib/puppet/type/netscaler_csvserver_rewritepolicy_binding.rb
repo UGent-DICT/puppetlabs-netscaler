@@ -55,25 +55,25 @@ Max = 2147483647"
   end
 
   autorequire(:netscaler_csvserver) do
-    if !self.deleting?
+    unless deleting?
       [self[:name].split('/')[0], self[:invoke_vserver_label]]
     end
   end
 
   autobefore(:netscaler_csvserver) do
-    if self.deleting?
+    if deleting?
       [self[:name].split('/')[0], self[:invoke_vserver_label]]
     end
   end
 
   autorequire(:netscaler_rewritepolicy) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[1]
     end
   end
 
   autobefore(:netscaler_rewritepolicy) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[1]
     end
   end

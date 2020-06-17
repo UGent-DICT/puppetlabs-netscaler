@@ -17,8 +17,7 @@ Puppet::Type.type(:netscaler_cachepolicylabel_cachepolicy_binding).provide(:rest
                          name: "#{bind['labelname']}/#{bind['policyname']}",
                          priority: bind['priority'],
                          goto_expression: bind['gotopriorityexpression'],
-                         invoke_policy_label: bind['invoke_labelname']),
-
+                         invoke_policy_label: bind['invoke_labelname'])
       end
     end
 

@@ -38,25 +38,25 @@ Max = 2147483647"
   end
 
   autorequire(:netscaler_csvserver) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[0]
     end
   end
 
   autobefore(:netscaler_csvserver) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[0]
     end
   end
 
   autorequire(:netscaler_cspolicy) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[1]
     end
   end
 
   autobefore(:netscaler_cspolicy) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[1]
     end
   end
@@ -66,13 +66,13 @@ Max = 2147483647"
   end
 
   autorequire(:netscaler_lbvserver) do
-    if !self.deleting?
+    unless deleting?
       self[:target_lbvserver]
     end
   end
 
   autobefore(:netscaler_lbvserver) do
-    if self.deleting?
+    if deleting?
       self[:target_lbvserver]
     end
   end

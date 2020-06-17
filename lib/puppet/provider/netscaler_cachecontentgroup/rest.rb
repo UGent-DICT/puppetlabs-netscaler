@@ -16,8 +16,7 @@ Puppet::Type.type(:netscaler_cachecontentgroup).provide(:rest, parent: Puppet::P
                        name: cachecontentgroup['name'],
                        rel_expiry: cachecontentgroup['relexpiry'],
                        mem_limit: cachecontentgroup['memlimit'],
-                       max_response_size: cachecontentgroup['maxressize'],
-                      )
+                       max_response_size: cachecontentgroup['maxressize'])
     end
 
     instances

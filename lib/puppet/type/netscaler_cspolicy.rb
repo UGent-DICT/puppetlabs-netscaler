@@ -33,7 +33,7 @@ Puppet::Type.newtype(:netscaler_cspolicy) do
     desc 'Expression, or name of a named expression, against which traffic is evaluated. Written in the classic or default syntax.'
   end
 
-  autorequire (:netscaler_csaction) do
+  autorequire(:netscaler_csaction) do
     self[:action]
   end
 end

@@ -27,7 +27,7 @@ Puppet::Type.newtype(:netscaler_cachepolicylabel_cachepolicy_binding) do
   end
 
   autorequire(:netscaler_cachepolicylabel) do
-    if !self.deleting?
+    unless deleting?
       [
         self[:name].split('/')[0],
         self[:invoke_policy_label],
@@ -36,7 +36,7 @@ Puppet::Type.newtype(:netscaler_cachepolicylabel_cachepolicy_binding) do
   end
 
   autobefore(:netscaler_cachepolicylabel) do
-    if self.deleting?
+    if deleting?
       [
         self[:name].split('/')[0],
         self[:invoke_policy_label],
@@ -45,13 +45,13 @@ Puppet::Type.newtype(:netscaler_cachepolicylabel_cachepolicy_binding) do
   end
 
   autorequire(:netscaler_cachepolicy) do
-    if !self.deleting?
+    unless deleting?
       self[:name].split('/')[1]
     end
   end
 
   autobefore(:netscaler_cachepolicy) do
-    if self.deleting?
+    if deleting?
       self[:name].split('/')[1]
     end
   end
