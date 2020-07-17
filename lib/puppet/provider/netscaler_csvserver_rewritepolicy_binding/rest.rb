@@ -16,22 +16,22 @@ Puppet::Type.type(:netscaler_csvserver_rewritepolicy_binding).provide(:rest, par
         case bind['labeltype']
         when 'reqvserver'
           vserverlabel = bind['labelname']
-          labeltype = 'Request'
         when 'resvserver'
           vserverlabel = bind['labelname']
-          labeltype = 'Response'
         when 'policylabel'
           policylabel = bind['labelname']
-          case bind['bindpoint']
-          when 'REQUEST'
-            labeltype = 'Request'
-          when 'RESPONSE'
-            labeltype = 'Response'
-          end
         end
+
+        case bind['bindpoint']
+        when 'REQUEST'
+          choose_type = 'Request'
+        when 'RESPONSE'
+          choose_type = 'Response'
+        end
+
         instances << new(ensure: :present,
                          name: "#{bind['name']}/#{bind['policyname']}",
-                         choose_type: labeltype,
+                         choose_type: choose_type,
                          priority: bind['priority'],
                          goto_expression: bind['gotopriorityexpression'],
                          invoke_policy_label: policylabel,

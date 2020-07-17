@@ -93,10 +93,4 @@ Max = 2147483647"
       raise 'Only one of invoke_policy_label or invoke_vserver_label may be specified per binding.'
     end
   end
-
-  validate do
-    if !self[:choose_type] && self[:ensure] != :absent
-      raise 'choose_type must be specified.'
-    end
-  end
 end
