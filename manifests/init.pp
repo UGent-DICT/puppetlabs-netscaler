@@ -1,4 +1,7 @@
-# @summary Calls netscaler::install.
+# @summary Installs the faraday gem
 class netscaler {
-  class { '::netscaler::install': }
+  package { 'faraday':
+    ensure   => present,
+    provider => 'puppet_gem',
+  }
 }
