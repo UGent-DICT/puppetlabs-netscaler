@@ -1,5 +1,3 @@
-#!/usr/bin/env rspec
-
 require 'spec_helper'
 
 res_type_name = :netscaler_responderpolicylabel

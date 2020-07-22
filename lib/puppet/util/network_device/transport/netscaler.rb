@@ -40,41 +40,33 @@ class Puppet::Util::NetworkDevice::Transport::Netscaler < Puppet::Util::NetworkD
   end
 
   def failure?(result)
-    unless result.status == 200 || result.status == 201
-      raise("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}")
-    end
+    raise("REST failure: HTTP status code #{result.status} detected.  Body of failure is: #{result.body}") unless result.status == 200 || result.status == 201
   end
 
   def post(url, json, args = {})
+    raise('Invalid JSON detected.') unless valid_json?(json)
     url = URI.escape(url) if url
     resource_type = url.split('/')[2]
-    if valid_json?(json)
-      result = connection.post do |req|
-        req.url "/nitro/v1#{url}", args
-        req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
-        req.body = json
-      end
-      failure?(result)
-      return result
-    else
-      raise('Invalid JSON detected.')
+    result = connection.post do |req|
+      req.url "/nitro/v1#{url}", args
+      req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
+      req.body = json
     end
+    failure?(result)
+    result
   end
 
   def put(url, json)
+    raise('Invalid JSON detected.') unless valid_json?(json)
     url = URI.escape(url) if url
     resource_type = url.split('/')[2]
-    if valid_json?(json)
-      result = connection.put do |req|
-        req.url "/nitro/v1#{url}"
-        req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
-        req.body = json
-      end
-      failure?(result)
-      return result
-    else
-      raise('Invalid JSON detected.')
+    result = connection.put do |req|
+      req.url "/nitro/v1#{url}"
+      req.headers['Content-Type'] = "application/vnd.com.citrix.netscaler.#{resource_type}+json"
+      req.body = json
     end
+    failure?(result)
+    result
   end
 
   def delete(url, args = {})

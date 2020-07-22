@@ -20,12 +20,11 @@ end
 def make_site_pp(pp, path = File.join(master['puppetpath'], 'manifests'))
   on master, "mkdir -p #{path}"
   create_remote_file(master, File.join(path, 'site.pp'), pp)
-  if ENV['PUPPET_INSTALL_TYPE'] == 'foss'
-    on master, "chown -R #{puppet_user(master)}:#{puppet_group(master)} #{path}"
-    on master, "chmod -R 0755 #{path}"
-    on master, "service #{(master['puppetservice'] || 'puppetserver')} restart"
-    wait_for_master(3)
-  end
+  return unless ENV['PUPPET_INSTALL_TYPE'] == 'foss'
+  on master, "chown -R #{puppet_user(master)}:#{puppet_group(master)} #{path}"
+  on master, "chmod -R 0755 #{path}"
+  on master, "service #{(master['puppetservice'] || 'puppetserver')} restart"
+  wait_for_master(3)
 end
 
 def run_device(options = { allow_changes: true })
@@ -46,7 +45,7 @@ end
 def device_facts_ok(max_retries)
   1.upto(max_retries) do |retries|
     on master, puppet('device', '-v', '--user', 'root', '--server', master.to_s), acceptable_exit_codes: [0, 1] do |result|
-      return if result.stdout =~ %r{Notice: (Finished|Applied) catalog}
+      return if result.stdout =~ %r{Notice: (Finished|Applied) catalog} # rubocop:disable Lint/NonLocalExitFromIterator
 
       counter = 10 * retries
       logger.debug "Unable to get a successful catalog run, Sleeping #{counter} seconds for retry #{retries}"

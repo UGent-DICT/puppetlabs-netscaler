@@ -10,7 +10,7 @@ Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Nets
   def self.recursive_instances(dir = '')
     instances = []
     # look for files at a certain location
-    location = dir.gsub(/\//, '%2F')
+    location = dir.gsub(%r{/}, '%2F')
     files = Puppet::Provider::Netscaler.call('/config/systemfile', 'args' => "filelocation:%2Fnsconfig%2F#{location}")
     return [] if files.nil?
 
@@ -58,7 +58,7 @@ Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Nets
     if @property_hash && !@property_hash.empty?
       path = @property_hash[:name]
       filename = File.basename(path)
-      path = "/nsconfig/#{File.dirname(path)}".gsub(/\//, '%2F')
+      path = "/nsconfig/#{File.dirname(path)}".gsub(%r{/}, '%2F')
       Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{filename}", 'args' => "filelocation:#{path}")
       result = create
     end
@@ -68,7 +68,7 @@ Puppet::Type.type(:netscaler_file).provide(:rest, parent: Puppet::Provider::Nets
   def destroy
     path = @property_hash[:name]
     filename = File.basename(path)
-    path = "/nsconfig/#{File.dirname(path)}".gsub(/\//, '%2F')
+    path = "/nsconfig/#{File.dirname(path)}".gsub(%r{/}, '%2F')
     result = Puppet::Provider::Netscaler.delete("/config/#{netscaler_api_type}/#{filename}", 'args' => "filelocation:#{path}")
     @property_hash.clear
     result

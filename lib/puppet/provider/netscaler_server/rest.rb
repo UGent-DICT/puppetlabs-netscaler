@@ -51,21 +51,19 @@ Puppet::Type.type(:netscaler_server).provide(:rest, parent: Puppet::Provider::Ne
   def per_provider_munge(message)
     unless @create_elements
       # Only ip addresses are mutable.
-      if self.class.is_ip_address(message[:address])
+      if self.class.ip_address?(message[:address])
         # If :domain is in the @property_hash, that means the resource is
         # a domain resource. If the user passed in an IP as :address, bad
         # things will happen, but we'll go ahead and try the rest call
         # anyway...
         message.delete(:domain)
-      else
-        if message[:address] != @original_values[:address]
-          raise ArgumentError, 'Cannot change a domain address after creation.'
-        end
+      elsif message[:address] != @original_values[:address]
+        raise ArgumentError, 'Cannot change a domain address after creation.'
       end
     end
 
     # Detect if the address is an IP or a domain name
-    unless self.class.is_ip_address(message[:address])
+    unless self.class.ip_address?(message[:address])
       message[:domain] = message[:address]
       message.delete(:address)
     end

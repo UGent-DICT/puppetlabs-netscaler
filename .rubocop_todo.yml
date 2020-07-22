@@ -1,2 +1,8 @@
 Metrics/LineLength:
   Enabled: false
+Style/Documentation:
+  Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/acceptance/netscaler_sslvserver_spec.rb'

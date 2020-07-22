@@ -41,11 +41,11 @@ Puppet::Type.type(:netscaler_feature).provide(:rest, parent: Puppet::Provider::N
     action = case resource[:ensure]
              when :present then 'enable'
              when :absent then 'disable'
-    end
+             end
 
     # map english name to rest name, ie Web Logging to wl
     rest_name = Puppet::Type::Netscaler_feature.rest_name_map.rassoc(resource[:name])[0]
 
-    result = Puppet::Provider::Netscaler.post('/config/nsfeature', { nsfeature: { feature: rest_name } }.to_json, 'action' => action)
+    _result = Puppet::Provider::Netscaler.post('/config/nsfeature', { nsfeature: { feature: rest_name } }.to_json, 'action' => action)
   end
 end

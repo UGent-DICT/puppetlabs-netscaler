@@ -12,9 +12,8 @@ class Puppet::Util::NetworkDevice::Netscaler::Device
       self,
       'puppet/util/network_device/transport',
     )
-    if @autoloader.load('netscaler', Puppet.lookup(:current_environment))
-      @transport = Puppet::Util::NetworkDevice::Transport::Netscaler.new(url, options[:debug])
-    end
+    return unless @autoloader.load('netscaler', Puppet.lookup(:current_environment))
+    @transport = Puppet::Util::NetworkDevice::Transport::Netscaler.new(url, options[:debug])
   end
 
   def facts

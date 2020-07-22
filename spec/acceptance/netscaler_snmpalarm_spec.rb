@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'snmpalarm tests' do
-  it 'enables an alarm' do
+  it 'enables an alarm' do # rubocop:disable RSpec/RepeatedExample
     pp = <<-EOS
       netscaler_snmpalarm { 'entity-state':
         severity         => 'critical',
@@ -25,7 +25,7 @@ describe 'snmpalarm tests' do
     run_device(allow_changes: false)
   end
 
-  it 'reenables an alarm' do
+  it 'reenables an alarm' do # rubocop:disable RSpec/RepeatedExample
     pp = <<-EOS
       netscaler_snmpalarm { 'entity-state':
         severity         => 'critical',

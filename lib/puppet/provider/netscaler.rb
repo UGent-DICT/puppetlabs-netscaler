@@ -16,7 +16,7 @@ class Puppet::Provider::Netscaler < Puppet::Provider
   def self.prefetch(resources)
     nodes = instances
     resources.keys.each do |name|
-      if provider = nodes.find { |node| node.name == name }
+      if (provider = nodes.find { |node| node.name == name })
         resources[name].provider = provider
       end
     end
@@ -119,14 +119,14 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     when 'DISABLED'
       action = 'disable'
     when nil
-    # Do nothing
+      # Do nothing
+      nil
     else
       err "Incorrect state: #{value}"
     end
 
-    if action
-      Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message_hash, 'action' => action)
-    end
+    return unless action
+    Puppet::Provider::Netscaler.post("/config/#{netscaler_api_type}", message_hash, 'action' => action)
   end
 
   def property_to_rest_mapping
@@ -303,8 +303,8 @@ class Puppet::Provider::Netscaler < Puppet::Provider
     hash.reject { |_k, v| v.nil? }
   end
 
-  def self.is_ip_address(value)
-    !!(value && (value.match(Resolv::IPv6::Regex) || value.match(Resolv::IPv4::Regex)))
+  def self.ip_address?(value)
+    !!(value && (value.match(Resolv::IPv6::Regex) || value.match(Resolv::IPv4::Regex))) # rubocop:disable Style/DoubleNegation
   end
 
   ## Find the type of a given profile in the profile cache, or if it is not found

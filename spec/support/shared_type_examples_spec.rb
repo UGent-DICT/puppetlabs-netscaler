@@ -50,7 +50,7 @@ shared_examples 'a puppet type' do |parameter_tests, res_type_name|
         pending('should throw an error for invalid values')
       end
 
-      if prop = res_type.propertybyname(param)
+      if prop == res_type.propertybyname(param)
         it 'has docs' do
           prop.doc.should_not.nil?
           prop.doc.should_not == ''
