@@ -207,7 +207,7 @@ Puppet::Type.type(:netscaler_lbmonitor).provide(:rest, parent: Puppet::Provider:
       message.delete(:vendor_id)
       message.delete(:firmware_revision)
     end
-    message.delete(:max_forwards) if (message[:max_forwards]).zero?
+    message.delete(:max_forwards) if (message[:max_forwards]).nil? || (message[:max_forwards]).zero?
     message.delete(:dynamic_interval)
     message.delete(:dynamic_timeout)
     message.delete(:action) if message[:action] == 'Not applicable'
