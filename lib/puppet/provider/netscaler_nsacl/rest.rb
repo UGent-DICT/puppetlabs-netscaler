@@ -29,7 +29,7 @@ Puppet::Type.type(:netscaler_nsacl).provide(:rest, parent: Puppet::Provider::Net
                        destportop: nsacl['destportop'],
                        destportval: nsacl['destportval'],
                        ttl: nsacl['ttl'],
-                       srcmac: nsacl['srcmac'],
+                       srcmac: nsacl['srcmac'] || '00:00:00:00:00:00',
                        srcmacmask: nsacl['srcmacmask'],
                        protocol: nsacl['protocol'],
                        protocolnumber: nsacl['protocolnumber'],
