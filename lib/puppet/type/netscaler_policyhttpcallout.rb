@@ -24,7 +24,7 @@ Puppet::Type.newtype(:netscaler_policyhttpcallout) do
     desc 'Server port to which the HTTP callout agent is mapped. Mutually exclusive with the Virtual Server parameter.'
 
     validate do |value|
-      if !value.is_a?(Integer) && Integer(value).between?(1, 65_535)
+      unless value.is_a?(Integer) && Integer(value).between?(1, 65_535)
         raise ArgumentError, 'port should be a valid port number'
       end
     end
