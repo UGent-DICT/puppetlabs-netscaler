@@ -15,4 +15,16 @@ Puppet::Type.newtype(:netscaler_authenticationsamlpolicy) do
   newproperty(:request_action) do
     desc 'Name of the SAML authentication action to be performed if the policy matches.'
   end
+
+  autorequire(:netscaler_authenticationsamlaction) do
+    unless deleting?
+      self[:request_action]
+    end
+  end
+
+  autobefore(:netscaler_authenticationsamlaction) do
+    if deleting?
+      self[:request_action]
+    end
+  end
 end
