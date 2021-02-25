@@ -128,11 +128,20 @@ Puppet::Type.newtype(:netscaler_authenticationsamlaction) do
     desc 'Name of the attribute in SAML Assertion whose value needs to be extracted and stored as attribute16. Maximum length of the extracted attribute is 239 bytes.'
   end
 
-  newproperty(:signature_algortithm) do
+  newproperty(:signature_algorithm) do
     desc 'Algorithm to be used to compute/verify digest for SAML transactions.'
     validate do |value|
+      unless ['RSA-SHA1', 'RSA-SHA256'].include?(value)
+        raise ArgumentError, 'signature_algorithm should be either "RSA-SHA1" or "RSA-SHA256".'
+      end
+    end
+  end
+
+  newproperty(:digest_method) do
+    desc 'Algorithm to compute/verify digest for SAML transactions.'
+    validate do |value|
       unless ['SHA1', 'SHA256'].include?(value)
-        raise ArgumentError, 'signaturealg should be either "SHA1" or "SHA256".'
+        raise ArgumentError, 'digest_method should be either "SHA1" or "SHA256".'
       end
     end
   end
