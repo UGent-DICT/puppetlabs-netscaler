@@ -17,6 +17,7 @@ Puppet::Type.type(:netscaler_authenticationsamlaction).provide(:rest, parent: Pu
       instances << new(ensure: :present,
                        name: action['name'],
                        saml_metadata_url: action['metadataurl'],
+                       metadata_refresh_interval: action['metadatarefreshinterval'],
                        saml_idp_certname: action['samlidpcertname'],
                        saml_signing_certname: action['samlsigningcertname'],
                        saml_redirecturl: action['samlredirecturl'],
@@ -68,6 +69,7 @@ Puppet::Type.type(:netscaler_authenticationsamlaction).provide(:rest, parent: Pu
   def property_to_rest_mapping
     {
       saml_metadata_url: :metadataurl,
+      metadata_refresh_interval: :metadatarefreshinterval,
       saml_idp_certname: :samlidpcertname,
       saml_signing_certname: :samlsigningcertname,
       saml_redirecturl: :samlredirecturl,

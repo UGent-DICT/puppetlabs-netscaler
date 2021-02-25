@@ -13,6 +13,10 @@ Puppet::Type.newtype(:netscaler_authenticationsamlaction) do
     desc 'This URL is used for obtaining saml metadata. Note that it fills samlIdPCertName and samlredirectUrl fields so those fields should not be updated when metadataUrl present.'
   end
 
+  newproperty(:metadata_refresh_interval) do
+    desc 'Interval in minutes for fetching metadata from specified metadata URL.'
+  end
+
   newproperty(:saml_idp_certname) do
     desc 'Name of the NetScaler named rule, or a default syntax expression, that the action uses to determine whether to attempt to authenticate the user with the SAML server.'
   end
